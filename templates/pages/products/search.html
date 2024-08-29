@@ -1,0 +1,14 @@
+{% extends 'layouts/default.html' %}
+
+{% block main %}
+  {% if product_search %}
+    {% for product in product_search %}
+    <div class="product-container">
+      <span>{{product.title}}</span> 
+      <img src="{{product.thumbnail}}" width="100px" height="auto" alt="Ảnh Sản Phẩm">
+    </div>
+    {% endfor %}
+  {% else %}
+    <span>Không tìm thấy kết quả của '{{keyword}}'</span>
+  {% endif %}
+{% endblock %}

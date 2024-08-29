@@ -1,0 +1,28 @@
+{% extends 'layouts/default.html' %}
+
+{% block main %}
+  {% for room in rooms %}
+  <br />
+  <button class="btn btn-primary" id = "{{room.name}}" button-check>{{room.name}}</button>
+  <br />
+  {% endfor %}
+
+  <form action="" method="POST" data-path="/account/box-mess/" form-message >
+    {% csrf_token %}
+  </form>
+
+
+
+  <script>
+    const checkMess = document.querySelectorAll("[button-check]");
+    const formMess = document.querySelector('[form-message]')
+    const pathMess = formMess.getAttribute("data-path")
+    checkMess.forEach((button) => {
+      button.addEventListener("click", () => {
+        const nameForm = button.getAttribute("id")
+        formMess.action = pathMess + `${nameForm}`
+        formMess.submit()
+      });
+    });
+  </script>
+{% endblock %}

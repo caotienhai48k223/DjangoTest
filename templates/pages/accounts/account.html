@@ -1,0 +1,58 @@
+{% extends 'layouts/default.html' %}
+
+{% block main %}
+  {% if user.is_authenticated %}
+    <h1 welcome username={{user.username}}>Welcome, {{user.username}}</h1>
+    <br><br><br><br><br>
+    {% if user.is_superuser %}
+    <button class="btn btn-primary">
+      <a href="/message-management/" style="text-decoration: none; color: white;">Check Inbox</a>
+    </button>
+    <br><br><br>
+    {% else %}
+    <button class="btn btn-primary" inbox>Inbox</button>
+    <br><br><br>
+    {% endif %}
+    <button class="btn btn-warning" inbox>
+      <a href="/update_user/" style="text-decoration: none;">
+        Sửa Hồ Sơ
+      </a>
+    </button>
+    <br><br><br>
+    <button class="btn btn-warning" inbox>
+      <a href="/update_info/" style="text-decoration: none;">
+        Sửa Thông Tin
+      </a>
+    </button>
+    <br><br><br>
+    <button class="btn btn-secondary">
+      <a href="/logout/">
+        <i class="fa-solid fa-right-from-bracket"></i> Logout
+      </a>
+    </button>
+
+    <form action="/account/box-mess/check-box" method="POST" form-check-inbox>
+      {% csrf_token %}
+      <input type="text" name="name" class="d-none" input-check-box>
+    </form>
+
+    <script>
+      const checkInbox = document.querySelector('[inbox]')
+      if (checkInbox) {
+        const formCheckInbox = document.querySelector('[form-check-inbox]')
+        const inpCheckInbox = formCheckInbox.querySelector('[input-check-box]')
+        checkInbox.addEventListener('click', () => {
+          const name = document.querySelector('[welcome]').getAttribute('username')
+          inpCheckInbox.value = name
+          formCheckInbox.submit()
+        })
+      }
+    </script>
+  
+  {% else %}
+    <h1>Vui lòng đăng nhập</h1>
+    <a href="/login/">Đăng nhập</a>
+  {% endif %}
+
+  
+{% endblock %}

@@ -1,0 +1,38 @@
+{% extends 'layouts/default.html' %}
+
+{% block main %}
+  {% for item in cart_products%}
+    {% if item.product.is_sale %}
+      <div>
+        {{item}} ---  Giá: {{item.product.sale_price}}
+      </div>
+        {% for key, value in quantities.items%}
+          {% if key == item.id|slugify %}
+            Số Lượng : {{value}}
+          {% endif %}
+        {% endfor %}
+    {% else %}
+      <div>
+        {{item}} --- Giá: {{item.product.price}}
+      </div>
+        {% for key, value in quantities.items%}
+          {% if key == item.id|slugify %}
+            Số Lượng : {{value}}
+          {% endif %}
+        {% endfor %}
+    {% endif %}
+  {% endfor %}
+  <br><br>
+  <div><strong>Tống Giá: </strong> {{totals}} VNĐ</div>
+  <br><br>
+  <h3>Thông Tin Đặt Hàng</h3>
+  <div>
+    <form action="/payment/billing_info/" method="POST">
+      {% csrf_token %}
+      {{ shipping_form.as_p }}
+      <button type="submit" class="btn btn-primary">Tiếp tục đơn hàng</button>
+    </form>
+    <br>
+    <a href="/cart/" class="btn btn-secondary">Chỉnh Sửa Giỏ Hàng</a>
+  </div>
+{% endblock %}

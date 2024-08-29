@@ -1,0 +1,94 @@
+<header>
+  <div class="top-banner">
+    <div class="marquee-container">
+      <div class="item-marquee">
+        <a href="">VOUCHER 100K CHO HĐ 2499K</a>
+      </div>
+      <div class="item-marquee">
+        <a href="">FREESHIP 20K CHO HĐ 500K</a>
+      </div>
+      <div class="item-marquee">
+        <a href="">GIAO HỎA TỐC 2H GỌI NGAY 1900633494 PHÍM 2</a>
+      </div>
+      <div class="item-marquee">
+        <a href="">TẶNG TÚI CÓI CHO HĐ 1999K</a>
+      </div>
+    </div>
+  </div>
+  <div class="side-header-center">
+    <div class="header-container">
+      <div class="header-content">
+        <div class="header-logo">
+          <a href="/">
+            <img
+              src="https://theme.hstatic.net/200000284249/1000799870/14/logo.png?v=3587"
+              alt="Rechic"
+            />
+          </a>
+        </div>
+        <div class="header-navigation">
+          <div class="header-navigation-wrapper">
+            <nav class="nav-header">
+              <ul id="menu-desktop" class="menu-desktop">
+                <li class="menu-item">
+                  <a href="" class="item-link">SẢN PHẨM MỚI</a>
+                </li>
+                <li class="spdd-hover">
+                  <a href="/collections/all/" class="item-link">SẢN PHẨM<i class="fa-solid fa-angle-down"></i></a>
+                  {% include './productdd.html' %}
+                </li>
+                <li class="menu-item">
+                  <a href="" class="item-link">BÁN CHẠY NHẤT</a>
+                </li>
+                <li class="menu-item">
+                  <a href="" style="color: red;" class="item-link">OUTLET SALE</a>
+                </li>
+                <li class="bstdd-hover">
+                  <a href="" class="item-link">BỘ SƯU TẬP<i class="fa-solid fa-angle-down"></i></a>
+                  {% include './collectiondd.html' %}
+                </li>
+                <li class="gtdd-hover">
+                  <a href="" class="item-link">GIỚI THIỆU<i class="fa-solid fa-angle-down"></i></a>
+                </li>
+              </ul>
+            </nav>
+          </div>
+        </div>
+        <div class="header-group-icon">
+          <div class="header-gi">
+            <ul class="list-icon">
+              <li title="Tìm Kiếm" form-search>
+                <a>
+                  <i class="bi bi-search"></i>
+                </a>
+              </li>
+              <li
+                title="{% if user.is_authenticated %} Hi, {{user.username}} {% else %} Đăng Nhập {%endif%}"
+              >
+                <a
+                  href="{% if user.is_authenticated %}/account{% else %}/login{%endif%}"
+                >
+                  <i class="fa-regular fa-user"></i>
+                </a>
+              </li>
+              <li>
+                <a href="">
+                  <i class="bi bi-geo-alt"></i>
+                </a>
+              </li>
+              <li>
+                <a href="/cart/" class="d-flex" style="align-items: center; text-decoration: none;">
+                  <i class="bi bi-handbag"></i>
+                  <span id="cart_quantity">{{cart | length}}</span>
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+
+

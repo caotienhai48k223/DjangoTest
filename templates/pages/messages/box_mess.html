@@ -1,0 +1,172 @@
+{% extends 'layouts/default.html' %}
+
+{% block main %}
+
+  <style>
+    .darker {
+      border-color: #ccc;
+      background-color: #ddd;
+    }
+
+    .admin {
+      border-color: #db1111;
+      background-color: #2e3396;
+    }
+
+    .time-right {
+      float: right;
+      color: #aaa;
+    }
+
+    .time-left {
+      float: left;
+      color: #999;
+    }
+  </style>
+  <script
+    src="https://code.jquery.com/jquery-3.1.1.min.js"
+    integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
+    crossorigin="anonymous"
+  ></script>
+
+  {% if user.is_superuser or user.username == title %}
+  <h2>{{room}}</h2>
+
+  <div id="display">
+    <!-- <div class="container darker">
+      <b>Tom</b>
+      <p>Hello Everyone, How Are You Guys Doing?</p>
+      <span class="time-left">20th, April 2021</span>
+    </div> -->
+  </div>
+
+  <script>
+    $(document).ready(function () {
+      setInterval(function () {
+        $("div#dse-quicksearch").remove();
+        $.ajax({
+          type: "GET",
+          url: "/account/box-mess/getMessages/{{room}}",
+          success: function (response) {
+            console.log(response)
+            $("#display").empty();
+            for (var key in response.messages) {
+              var containerClass =
+                response.messages[key].user == response.messages[key].room
+                  ? "container darker"
+                  : "container admin";
+
+              var createdDate = new Date(response.messages[key].created_date)
+              createdDate.setHours(createdDate.getHours()-7);
+
+              function formatDateTime(date) {
+                var options = {
+                  day: "2-digit",
+                  month: "2-digit",
+                  year: "numeric",
+                  hour: "2-digit",
+                  minute: "2-digit",
+                  second: "2-digit",
+                  timeZone: "Asia/Ho_Chi_Minh",
+                };
+                return date.toLocaleString("vi-VN", options);
+              }
+              var formattedDate = formatDateTime(createdDate);
+
+
+              var temp =
+                "<div class='" +
+                containerClass +
+                "'><b>" +
+                response.messages[key].user +
+                "</b><p>" +
+                response.messages[key].content +
+                "</p><span class='time-left'>" +
+                  formattedDate +
+                "</span></div>";
+              $("#display").append(temp);
+            }
+          },
+          error: function (response) {
+            alert("An error occured");
+          },
+        });
+      }, 1000);
+    });
+  </script>
+
+    <style>
+      input[type="text"],
+      select {
+        width: 100%;
+        padding: 12px 20px;
+        margin: 8px 0;
+        display: inline-block;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        box-sizing: border-box;
+      }
+
+      input[type="submit"] {
+        width: 100%;
+        background-color: #4caf50;
+        color: white;
+        padding: 14px 20px;
+        margin: 8px 0;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+      }
+
+      input[type="submit"]:hover {
+        background-color: #45a049;
+      }
+    </style>
+
+    <form id="post-form" method="POST">
+      {% csrf_token %}
+      <input
+        type="hidden"
+        name="username"
+        id="username"
+        value="{{user.username}}"
+      />
+      <input
+        type="hidden"
+        name="room_id"
+        id="room_id"
+        value="{{room.name}}"
+      />
+      <input type="text" name="message" id="message" width="100px" />
+      <input type="submit" value="Send" />
+    </form>
+
+  {% else %}
+  <h1>Bạn không phải admin thì làm ơn cút</h1>
+  <h5>Là admin thì ấn vào phía dưới để đăng nhập</h5>
+  <a href="message-management/login">Đăng Nhập</a>
+  {% endif%}
+
+
+  <script type="text/javascript">
+    $(document).on("submit", "#post-form", function (e) {
+      e.preventDefault();
+
+      $.ajax({
+        type: "POST",
+        url: "/account/box-mess/send",
+        data: {
+          username: $("#username").val(),
+          room_id: $("#room_id").val(),
+          message: $("#message").val(),
+          csrfmiddlewaretoken: $("input[name=csrfmiddlewaretoken]").val(),
+        },
+        success: function (data) {
+          alert(data);
+        },
+      });
+      document.getElementById("message").value = "";
+    });
+  </script>
+
+{% endblock %}

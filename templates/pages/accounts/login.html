@@ -1,0 +1,16 @@
+{% extends 'layouts/default.html' %}
+
+{% block main %}
+  <h1>Đăng Nhập</h1>
+  <h3>Nếu chưa có tài khoản, vui lòng <a href="/register/">Đăng Ký</a></h3>
+  <form method="POST" action="/login/" class="col-12">
+    {% csrf_token %}
+    <div class="col-6 mb-3">
+      <input type="text" class="form-control" name="username" placeholder="Enter Your Username">
+    </div>
+    <div class="col-6 mb-3">
+      <input type="password" class="form-control" name="password" placeholder="Enter Your Password">
+    </div>
+    <button type="submit" class="btn btn-primary col-6">Đăng Nhập</button>
+  </form>
+{% endblock %}

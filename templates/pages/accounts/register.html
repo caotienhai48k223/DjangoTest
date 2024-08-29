@@ -1,0 +1,12 @@
+{% extends 'layouts/default.html' %}
+
+{% block main %}
+  <h1>Đăng Ký</h1>
+
+  <form method="POST" action="/register/">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <br><br>
+    <button type="submit" class="btn btn-secondary">Đăng Ký</button>
+  </form>
+{% endblock %}

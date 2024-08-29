@@ -1,0 +1,16 @@
+{% extends 'layouts/default.html' %}
+
+{% block main %}
+  <h1>Chỉnh Sửa Thông Tin</h1>
+  <strong>Thông Tin Khách Hàng</strong>
+  <br><br>
+  <form method="POST" action="/update_info/">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <br><br>
+    <strong>Thông Tin Đặt Hàng</strong>
+    <br><br>
+    {{ shipping_form.as_p }}
+    <button type="submit" class="btn btn-secondary">Lưu Thay Đổi</button>
+  </form>
+{% endblock %}

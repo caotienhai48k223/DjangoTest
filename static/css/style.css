@@ -1,0 +1,253 @@
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap");
+
+h1 {
+  background: rgb(255, 255, 255);
+}
+@media (max-width: 1800px) {
+  .header-container, .top-banner {
+    padding-right: 100px;
+    padding-left: 100px;
+  }
+}
+@media (max-width: 1250px) {
+  .header-container, .top-banner {
+    padding-right: 20px;
+    padding-left: 20px;
+  }
+}
+header {
+  position: fixed;
+  width: 100vw;
+  box-shadow: 0 10px 15px rgba(0, 0, 0, 0.08); /* Only Bottom */;
+}
+.top-banner {
+  background-color: #fbe2dd;
+}
+.marquee-container {
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  height: 58.2px;
+}
+@keyframes marquee {
+  0% {
+    transform: translateX(100%);
+  }
+  100% {
+    transform: translateX(-100%);
+  }
+}
+.item-marquee {
+  white-space: nowrap;
+  display: inline-block;
+  animation: marquee 20s linear infinite;
+  top: 0;
+  left: 100%;
+  top: 30%;
+  transform: translateY(-50%);
+}
+.item-marquee a {
+  margin-right: 170px;
+  font-family: "Montserrat", sans-serif;
+  color: #222222;
+  font-size: 13px;
+  font-weight: 700;
+  text-decoration: none;
+}
+.item-marquee:hover a {
+  text-decoration: underline;
+  color: #222222;
+}
+
+
+
+.side-header-center {
+  background-color: white;
+}
+
+.header-container {
+  margin-right: auto;
+  margin-left: auto;
+  position: relative;
+  height: 58.2px;
+}
+.header-content {
+  display: grid;
+  grid-template-columns: 150px 1fr 150px;
+  align-items: center;
+  gap: 15px;
+}
+
+.header-logo {
+  display: flex;
+  justify-content: flex-start;
+}
+.header-logo a {
+  display: flex;
+  align-items: center;
+}
+.header-logo a img {
+  width: 120px;
+  height: auto;
+}
+
+.header-navigation {
+  width: 100%;
+  position: initial;
+  justify-content: center;
+  display: flex;
+  align-items: center;
+}
+
+.header-navigation-wrapper {
+  overflow: hidden;
+  max-height: 65px;
+}
+
+.nav-header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+}
+
+.menu-desktop {
+  min-height: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  max-width: 100%;
+  margin-bottom: 0;
+  padding-left: 0;
+  width: 100%;
+  list-style-type: none;
+}
+.menu-item, .spdd-hover, .bstdd-hover, .gtdd-item {
+  display: flex;
+  align-items: center;
+  height: 58.2px;
+}
+.item-link {
+  transform: translateY(0%);
+  font-size: 13px;
+  text-decoration: none;
+  font-family: "Montserrat", sans-serif;
+  color: rgb(0, 0, 0);
+  padding: 20px 15px;
+  display: flex;
+  align-items: center;
+  flex-wrap: nowrap;
+  text-align: center;
+  height: 58.2px;
+}
+
+.list-icon {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  list-style-type: none;
+  gap: 25px;
+  margin-bottom: 0;
+}
+.list-icon li {
+  vertical-align: top;
+  width: 40px;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+.list-icon li a {
+  font-size: 20px;
+  color: black;
+}
+
+.btn-secondary a {
+  text-decoration: none;
+}
+
+.header-search {
+  position: fixed;
+  top: 100px;
+  display: none;
+}
+#header-search {
+  display: flex;
+}
+
+#cart_quantity {
+  font-family: "Montserrat", sans-serif;
+  font-size: 13px;
+}
+
+.fa-angle-down{
+  font-size: 10px;
+  padding: 2px;
+}
+
+
+
+
+
+
+.productdd-container{
+  position: absolute;
+  top: 101.3%;
+  background-color: white;
+  transition: height 0.4s ease, font-size 0.3s ease;
+  overflow: hidden;
+  width: 210px;
+  /* display: none; */
+}
+.productdd-container li {
+  padding: 10px ;
+}
+.productdd-container a {
+  text-decoration: none;
+  color: #222222;
+  font-family: "Montserrat", sans-serif;
+  padding: 0;
+}
+.productdd-content {
+  padding: 10px 15px;
+}
+.productdd-container ul {
+  padding: 0;
+  list-style-type: none;
+}
+
+.bstdd-container{
+  position: absolute;
+  top: 101.3%;
+  width: 210px;
+  background-color: white;
+  overflow: hidden;
+  transition: height 0.4s ease, font-size 0.3s ease;
+  /* display: none; */
+}
+.bstdd-container li {
+  padding: 10px ;
+}
+.bstdd-container a {
+  text-decoration: none;
+  color: #222222;
+  font-family: "Montserrat", sans-serif;
+  padding: 0;
+}
+.bstdd-content {
+  padding: 10px 15px;
+}
+.bstdd-container ul {
+  padding: 0;
+  list-style-type: none;
+}
+.show {
+  height: 310px;
+  box-shadow: 0 0 15px 5px rgba(0, 0, 0, 0.08);
+  font-size: 13px;
+}
+.hide {
+  height: 0;
+  overflow: hidden;
+  font-size: 3px !important;
+}

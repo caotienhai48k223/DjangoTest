@@ -1,0 +1,95 @@
+{% extends 'layouts/default.html' %}
+
+{% block main %}
+  {% if cart_products%}
+    {%for message in messages%}
+    <div>{{message}}</div>
+    {% endfor %}
+    {% for item in cart_products%}
+      {% if item.product.is_sale %}
+        <div>
+          {{item}} {{item.product.sale_price}}
+        </div>
+          {% for key, value in quantities.items%}
+            {% if key == item.id|slugify %}
+              <div class="input-group mb-3" style="width: 150px;">
+                <input type="number" class="form-control" id="qty_{{item.id}}" value="{{value}}" min="1" >
+              </div>
+            {% endif %}
+          {% endfor %}
+        <button type="button" class="btn btn-success update-cart" value="{{item.id}}"  data-index="{{item.id}}">Cập Nhật</button>
+        <button type="button" class="btn btn-success delete-product" value="{{item.id}}"  data-index="{{item.id}}">X</button>
+        <br><br>
+      {% else %}
+        <div>
+          {{item}} {{item.product.price}}
+        </div>
+          {% for key, value in quantities.items%}
+            {% if key == item.id|slugify %}
+              <div class="input-group mb-3" style="width: 150px;">
+                <input type="number" class="form-control" id="qty_{{item.id}}" value="{{value}}" min="1" >
+              </div>
+            {% endif %}
+          {% endfor %}
+        <button type="button" class="btn btn-success update-cart" value="{{item.id}}"  data-index="{{item.id}}">Cập Nhật</button>
+        <button type="button" class="btn btn-success delete-product" value="{{item.id}}"  data-index="{{item.id}}">X</button>
+        <br><br>
+      {% endif %}
+    {% endfor %}
+    <div style="display: flex;">
+      <h3>Tổng giá: {{totals}}</h3>
+      <a href="/payment/checkout/">Thanh Toán</a>
+    </div>
+    
+
+    <script>
+      $(document).on('click', '.update-cart', function(e){
+        e.preventDefault();
+        var variantid = $(this).data('index')
+        $.ajax({
+          type:'POST',
+          url:"{% url 'cart-update' %}",
+          data: {
+            variant_id: $(this).data('index'),
+            variant_qty: $('#qty_' + variantid).val(),
+            csrfmiddlewaretoken: '{{csrf_token}}',
+            action:'post'
+          },
+          success: function(json){
+            location.reload()
+          },
+          error: function(xhr, errmsg, err){
+
+          }
+        })
+      })
+
+
+      $(document).on('click', '.delete-product', function(e){
+        e.preventDefault();
+        // var productid = $(this).data('index')
+        $.ajax({
+          type:'POST',
+          url:"{% url 'cart-delete' %}",
+          data: {
+            variant_id: $(this).data('index'),
+            csrfmiddlewaretoken: '{{csrf_token}}',
+            action:'post'
+          },
+          success: function(json){
+            // document.getElementById('cart_quantity').textContent = json.qty
+            location.reload()
+          },
+          error: function(xhr, errmsg, err){
+            
+          }
+        })
+      })
+    </script>
+  {% else %}
+  Chưa có chi cả
+  {% endif %}
+{% endblock %}
+
+
+

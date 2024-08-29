@@ -1,0 +1,10 @@
+{% extends 'layouts/default.html' %}
+
+{% block main %}
+  {% for product in products %}
+  <div class="product-container">
+    <a href="/products/{{product.slug}}">{{product.title}}</a>
+    <img src="{{product.thumbnail}}" width="100px" height="auto" alt="Ảnh Sản Phẩm">
+  </div>
+  {% endfor %}
+{% endblock %}
