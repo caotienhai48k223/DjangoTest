@@ -55,7 +55,7 @@ class Cart():
     return total
     
   def __len__(self):
-    return len(self.cart)
+    return sum(self.cart.values())
   
   def get_prods(self):
     variant_ids = [int(id) for id in self.cart.keys()]

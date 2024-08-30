@@ -53,7 +53,7 @@ def login(request):
         convert_cart = json.loads(save_cart)
         cart = Cart(request)
         for key, value in convert_cart.items():
-          cart.db_add(product=key, quantity=value)
+          cart.db_add(variant=key, quantity=value)
       return redirect('index')
     else:
       messages.info(request, ' Credential Invalid')
@@ -127,8 +127,13 @@ def product_detail(request, slug):
   variants = product.variants.all()
   colors = variants.values_list('color', flat=True).distinct()
   sizes = variants.values_list ('size', flat=True).distinct()[::-1]
-  images = product.images 
-  return render(request, 'pages/products/product_detail.html', { 'title': title, 'product': product, 'colors': colors, 'sizes': sizes, 'images': images})
+  if None in colors:
+    colors = []
+  if None in sizes:
+    sizes = []
+  images = product.images
+  img_main = images[0]
+  return render(request, 'pages/products/product_detail.html', { 'title': title, 'product': product, 'colors': colors, 'sizes': sizes, 'images': images, 'img_main':img_main})
 
 def search(request):
   keyword = request.GET.get('keyword', '')

@@ -11,8 +11,7 @@ class Profile(models.Model):
   user = models.OneToOneField(User, on_delete=models.CASCADE)
   date_modified = models.DateTimeField(User, auto_now=True)
   phone = models.CharField(max_length=20, blank=True)
-  address1 = models.CharField(max_length=200, blank=True)
-  address2 = models.CharField(max_length=200, blank=True)
+  address = models.CharField(max_length=200, blank=True)
   city = models.CharField(max_length=200, blank=True)
   state = models.CharField(max_length=200, blank=True)
   old_cart = models.CharField(max_length=200, blank=True, null=True)
@@ -83,8 +82,8 @@ class Product(models.Model):
 
 class ProductVariant(models.Model):
   product = models.ForeignKey(Product, related_name='variants', on_delete=models.CASCADE)
-  color = models.CharField(max_length=20)
-  size = models.CharField(max_length=10)
+  color = models.CharField(max_length=20, blank=True, null=True)
+  size = models.CharField(max_length=10, blank=True, null=True)
   quantity = models.DecimalField(max_digits=10, decimal_places=0, null=True)
   q_purchase = models.DecimalField(max_digits=10, decimal_places=0, null=True, default=0, blank=True)
   stock = models.DecimalField(max_digits=10, decimal_places=0, null=True, blank=True)

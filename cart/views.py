@@ -17,9 +17,9 @@ def cart_add(request):
   cart = Cart(request)
   if request.POST.get('action') == 'post':
     product_id = int(request.POST.get('product_id'))
-    product_color = request.POST.get('product_color')
-    product_size = request.POST.get('product_size')
     product_qty = int(request.POST.get('product_qty'))
+    product_color = request.POST.get('product_color', None)
+    product_size = request.POST.get('product_size', None)
     product = get_object_or_404(Product, id = product_id)
     variant = get_object_or_404(ProductVariant, product=product, color=product_color, size=product_size)
     cart.add(variant = variant, quantity = product_qty)

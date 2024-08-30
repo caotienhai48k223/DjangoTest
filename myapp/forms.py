@@ -5,8 +5,7 @@ from .models import Profile
 
 class UserInfoForm(forms.ModelForm):
   phone = forms.CharField(label="", widget=forms.TextInput(attrs={'class':'form-control', 'placeholder': 'Phone'}), required=False)
-  address1 = forms.CharField(label="", widget=forms.TextInput(attrs={'class':'form-control', 'placeholder': 'Địa Chỉ 1'}), required=False)
-  address2 = forms.CharField(label="", widget=forms.TextInput(attrs={'class':'form-control', 'placeholder': 'Địa Chỉ 2'}), required=False)
+  address = forms.CharField(label="", widget=forms.TextInput(attrs={'class':'form-control', 'placeholder': 'Địa Chỉ'}), required=False)
   city = forms.CharField(label="", widget=forms.TextInput(attrs={'class':'form-control', 'placeholder': 'Thành Phố'}), required=False)
   state = forms.CharField(label="", widget=forms.TextInput(attrs={'class':'form-control', 'placeholder': 'Tỉnh'}), required=False)
   zipcode = forms.CharField(label="", widget=forms.TextInput(attrs={'class':'form-control', 'placeholder': 'Mã Vùng'}), required=False)
@@ -14,7 +13,7 @@ class UserInfoForm(forms.ModelForm):
   
   class Meta:
     model = Profile
-    fields = ('phone', 'address1', 'address2', 'city', 'state', 'zipcode', 'country')
+    fields = ('phone', 'address', 'city', 'state', 'zipcode', 'country')
 
 class UpdateUserForm(UserChangeForm):
   password = None

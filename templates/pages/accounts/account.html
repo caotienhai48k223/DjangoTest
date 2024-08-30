@@ -6,11 +6,11 @@
     <br><br><br><br><br>
     {% if user.is_superuser %}
     <button class="btn btn-primary">
-      <a href="/message-management/" style="text-decoration: none; color: white;">Check Inbox</a>
+      <a href="/message-management/" style="text-decoration: none; color: white;">Tin Nhắn Khách Hàng</a>
     </button>
     <br><br><br>
     {% else %}
-    <button class="btn btn-primary" inbox>Inbox</button>
+    <button class="btn btn-primary" inbox>Trò Chuyện</button>
     <br><br><br>
     {% endif %}
     <button class="btn btn-warning" inbox>
@@ -25,9 +25,23 @@
       </a>
     </button>
     <br><br><br>
+    {%if user.is_superuser%}
+    <button class="btn btn-primary">
+      <a href="/payment/unshipped_tab/" style="text-decoration: none; color: white;">
+        Đơn Hàng Đang Giao
+      </a>
+    </button>
+    <br><br><br>
+    <button class="btn btn-primary">
+      <a href="/payment/shipped_tab/" style="text-decoration: none; color: white;">
+        Đơn Hàng Đã Giao
+      </a>
+    </button>
+    <br><br><br>
+    {% endif %}
     <button class="btn btn-secondary">
       <a href="/logout/">
-        <i class="fa-solid fa-right-from-bracket"></i> Logout
+        <i class="fa-solid fa-right-from-bracket"></i> Đăng Xuất
       </a>
     </button>
 

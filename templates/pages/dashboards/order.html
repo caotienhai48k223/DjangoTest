@@ -1,0 +1,53 @@
+{% extends 'layouts/default.html' %}
+
+{% block main %}
+  <div class="container">
+    <div class="row">
+      <center>
+        <div class="col-8">
+          <div class="card">
+            <div class="card-header">
+              Đơn Hàng {{order.id}} --- {{order.amount_paid}} VNĐ
+            </div>
+            <div class="card-body">
+              Email: {{order.email}}
+              <br>
+              Ngày Đặt Hàng: {{order.date_ordered}}
+              {% if order.shipped %}
+                <br>
+                Ngày Nhận Hàng: {{order.date_shipped}}
+              {% else %}
+                <br>
+                Ngày Nhận Hàng: Đang Giao Hàng
+              {% endif %}
+              <br>
+              Họ Tên: {{order.full_name}}
+              <br>
+              Địa Chỉ: <pre>{{order.shipping_address}}</pre>
+              
+              Chi Tiết Đơn Hàng: <br> 
+              {% for item in items %}
+                {{item.product_variant}} -- Số Lượng: {{item.quantity}} -- Giá: {{item.price}} VNĐ <br>
+              {% endfor %}
+              <br><br>
+              {% if not order.shipped %}
+              <form method="POST">
+                {% csrf_token %}
+                <input type="hidden" name="shipping_status" value="true">
+                <button type="submit" class="btn btn-outline-success">Đã Giao</button>
+              </form>
+              {% else %}
+              <form method="POST">
+                {% csrf_token %}
+                <input type="hidden" name="shipping_status" value="false">
+                <button type="submit" class="btn btn-outline-danger">Đang Giao</button>
+              </form>
+              {% endif %}
+            </div>
+          </div>
+          <br>
+        </div>
+      </center>
+    </div>
+  </div>
+{% endblock %}

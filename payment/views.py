@@ -4,7 +4,8 @@ from payment.forms import ShippingForm, PaymentForm
 from payment.models import ShippingAddress, Order, OrderItem
 from django.contrib.auth.models import User
 from django.contrib import messages
-from myapp.models import Product
+from myapp.models import Product, Profile
+import datetime
 # Create your views here.
 def checkout(request):
   title = 'Thanh Toán'
@@ -49,7 +50,7 @@ def process_order(request):
     my_shipping = request.session.get('my_shipping')
     full_name = my_shipping['shipping_full_name']
     email = my_shipping['shipping_email']
-    shipping_address = f"{my_shipping['shipping_address1']}\n{my_shipping['shipping_address2']}\n{my_shipping['shipping_city']}\n{my_shipping['shipping_state']}"
+    shipping_address = f"{my_shipping['shipping_address']}\n{my_shipping['shipping_city']}\n{my_shipping['shipping_state']}"
     amount_paid = totals
     
     if request.user.is_authenticated:
@@ -70,6 +71,8 @@ def process_order(request):
       for key in list(request.session.keys()):
         if key == "session_key":
           del request.session[key]
+      current_user = Profile.objects.filter(user__id = request.user.id)
+      current_user.update(old_cart="")
       messages.success(request, 'Đặt Hàng Thành Công')
       return redirect('index')
     else:
@@ -93,6 +96,54 @@ def process_order(request):
       return redirect('index')
   else:
     return redirect('index')
+
+def unshipped_tab(request):
+  if request.user.is_authenticated:
+    title = 'Đơn Hàng Đang Vận Chuyển'
+    orders = Order.objects.filter(shipped=False)
+    if request.POST:
+      num = request.POST['num']
+      order = Order.objects.filter(id=num)
+      now = datetime.datetime.now()
+      order.update(shipped=True, date_shipped=now)
+      messages.success(request, 'Cập Nhật Thành Công')
+      return redirect('/account/')
+    return render(request, "pages/dashboards/unshipped_tab.html", {'title': title, "orders": orders})
+  else:
+    return redirect('index')
+
+def shipped_tab(request):
+  if request.user.is_superuser:
+    title = 'Đơn Hàng Đã Giao'
+    orders = Order.objects.filter(shipped=True)
+    if request.POST:
+      num = request.POST['num']
+      order = Order.objects.filter(id=num)
+      order.update(shipped=False)
+      messages.success(request, 'Cập Nhật Thành Công')
+      return redirect('/account/')
+    return render(request, "pages/dashboards/shipped_tab.html", {"title": title, "orders": orders})
+  else:
+    return redirect('index')
+
+def order(request, pk):
+  if request.user.is_superuser:
+    order = Order.objects.get(id=pk)
+    items = OrderItem.objects.filter(order=pk)
+    if request.POST:
+      status = request.POST['shipping_status']
+      if status == 'true':
+        order = Order.objects.filter(id=pk)
+        now = datetime.datetime.now()
+        order.update(shipped=True, date_shipped=now)
+      else:
+        order = Order.objects.filter(id=pk)
+        order.update(shipped=False)
+      messages.success(request, 'Cập Nhật Thành Công')
+      return redirect('/account/')
+    return render(request, 'pages/dashboards/order.html', {'order': order, 'items': items})
+  else:
+    return redirect('home')
 
 def payment_success(request):
   return render(request, 'payments/payments/payment_success.html')

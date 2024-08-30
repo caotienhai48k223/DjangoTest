@@ -6,16 +6,27 @@
   <div>{{message}}</div>
   {% endfor %}
   <div class="product-container row">
-    <div class="col-6">
+    <div class="col-8 row">
+      <div class="col-4">
       {% for image in images %}
-        <div class="col-3">
-          <img src="{{image}}" width="100px" height="auto" alt="Ảnh Biến Thể">
+        <div class="col-4">
+          <img img_secondary src="{{image}}" width="100px" height="auto" style="cursor: pointer;" alt="Ảnh Biến Thể">
         </div>
       {% endfor %}
+      {% if product.size_chart %}
+        <div class="col-4">
+          <img img_secondary src="{{product.size_chart}}" width="100px" height="auto" style="cursor: pointer;" alt="Hướng Dẫn Chọn Size">
+        </div>
+      {% endif %}
+      </div>
+      <div class="col-8">
+        <img img_main src="{{img_main}}" width="200px" alt="">
+      </div>
     </div>
-    <div class="col-6">
+    <div class="col-4">
       <p>{{product.title}}</p>
       <p>{{product.price}}</p>
+      {% if colors %}
       <div class="hihi">
         <h5>Chọn Màu</h5>
         {% for color in colors %}
@@ -23,6 +34,9 @@
         {% endfor %}
         <input class="d-none" id="color-cart" value="">
       </div>
+      {% endif %}
+
+      {% if sizes %}
       <div class="huhu">
         <h5>Chọn Size</h5>
         {% for size in sizes%}
@@ -30,6 +44,7 @@
         {% endfor %}
         <input class="d-none" id="size-cart" value="">
       </div>
+      {% endif %}
       <div>
         <input type="number" style="width: 100px;" class="form-control" id="qty-cart" value="1" min="1">
       </div>
@@ -39,6 +54,19 @@
 
 
   <script>
+    const imgMain = document.querySelector('[img_main]')
+    const imgSecondary = document.querySelectorAll('[img_secondary]')
+    if (imgMain && imgSecondary) {
+      imgSecondary.forEach((img) => {
+        img.addEventListener('click', () => {
+          const linkImgSecondary = img.getAttribute('src')
+          imgMain.setAttribute('src', linkImgSecondary)
+        })
+      })
+    }
+
+
+
     const buttonColors = document.querySelectorAll('[select_color]')
     const colorInput = document.querySelector('#color-cart')
     if (buttonColors.length > 0) {
@@ -76,17 +104,27 @@
 
     $(document).on('click', '#add-cart', function(e){
       e.preventDefault();
+      var product_id = $('#add-cart').val();
+      var product_qty = $('#qty-cart').val();
+      var product_color = $('#color-cart').length ? $('#color-cart').val() : null;
+      var product_size = $('#size-cart').length ? $('#size-cart').val() : null;
+      var data = {
+        product_id: product_id,
+        product_qty: product_qty,
+        csrfmiddlewaretoken: '{{ csrf_token }}',
+        action: 'post'
+      };
+      if (product_color !== null) {
+        data.product_color = product_color;
+      }
+      if (product_size !== null) {
+        data.product_size = product_size;
+      }
+      console.log(data)
       $.ajax({
         type:'POST',
         url:"{% url 'cart-add' %}",
-        data: {
-          product_id: $('#add-cart').val(),
-          product_qty: $('#qty-cart').val(),
-          product_color: $('#color-cart').val(),
-          product_size: $('#size-cart').val(),
-          csrfmiddlewaretoken: '{{csrf_token}}',
-          action:'post'
-        },
+        data: data,
         success: function(json){          
           location.reload()
         },
