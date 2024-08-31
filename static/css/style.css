@@ -15,11 +15,61 @@ h1 {
     padding-left: 20px;
   }
 }
+
 header {
   position: fixed;
   width: 100vw;
   box-shadow: 0 10px 15px rgba(0, 0, 0, 0.08); /* Only Bottom */;
+  z-index: 999;
 }
+.payment-card {
+  position: fixed; 
+  background-color: #222; 
+  height: 100vh; 
+  width: 100vw;
+  z-index: 99999; 
+  top: 0;
+  padding: 30px;
+}
+.content-payment-div {
+  height: 80vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+}
+.payment-img {
+  margin: 20px;
+}
+.payment-img img {
+  width: 35vh;
+  height: auto;
+}
+.note-payment strong {
+  font-family: "Montserrat", sans-serif;
+  font-size: 20px;
+  color: #fbe2dd;
+}
+.note-payment i {
+  font-family: "Montserrat", sans-serif;
+  font-size: 16px;
+  color: #fbe2dd;
+}
+.x-mark-div {
+  display: flex;
+  justify-content: flex-end;
+}
+.x-icon-img {
+  cursor: pointer;
+  font-size: 25px;
+  color: red;
+}
+.btn-payment-div {
+  display: flex;
+  justify-content: center;
+}
+
+
+
 .top-banner {
   background-color: #fbe2dd;
 }

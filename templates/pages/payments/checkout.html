@@ -1,6 +1,9 @@
 {% extends 'layouts/default.html' %}
 
 {% block main %}
+  {% for message in messages%}
+    <div>{{message}}</div>
+  {% endfor%}
   {% for item in cart_products%}
     {% if item.product.is_sale %}
       <div>
@@ -24,15 +27,52 @@
   {% endfor %}
   <br><br>
   <div><strong>Tống Giá: </strong> {{totals}} VNĐ</div>
+  <a href="/cart/" class="btn btn-secondary">Chỉnh Sửa Giỏ Hàng</a>
   <br><br>
   <h3>Thông Tin Đặt Hàng</h3>
   <div>
     <form action="/payment/billing_info/" method="POST">
       {% csrf_token %}
-      {{ shipping_form.as_p }}
+      {{ shipping_form.shipping_full_name }}
+      <br>
+      {{ shipping_form.shipping_phone }}
+      <br>
+      {{ shipping_form.shipping_address }}
+      <br>
+      {{ shipping_form.shipping_city }}
+      <br>
+      {{ shipping_form.shipping_state }}
+      <br>
+      <label for="payment-type">Phương Thức Thanh Toán</label>
+      {{ shipping_form.shipping_payment_type }}
+      <br>
+      <div id="card-info" class="d-none">
+        {{ shipping_form.shipping_card_number }}
+        <br>
+        {{ shipping_form.shipping_bank }}
+      </div>
+      <br><br><br>
       <button type="submit" class="btn btn-primary">Tiếp tục đơn hàng</button>
     </form>
     <br>
-    <a href="/cart/" class="btn btn-secondary">Chỉnh Sửa Giỏ Hàng</a>
   </div>
+  <script>
+    const paymentType = document.querySelectorAll('#payment-type input[type="radio"]')
+    const cardInfoDiv = document.querySelector('#card-info')
+    if (paymentType.length > 0) {
+      paymentType.forEach((choose) => {
+        choose.addEventListener('click', () => {
+          if (choose.value === 'card') {
+            cardInfoDiv.classList.remove('d-none')
+          } else {
+            if ('d-none' in cardInfoDiv.classList) {
+              cardInfoDiv.classList.add('')
+            } else {
+              cardInfoDiv.classList.add('d-none')
+            }
+          }
+        })
+      })
+    }
+  </script>
 {% endblock %}

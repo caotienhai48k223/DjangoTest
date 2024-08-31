@@ -4,16 +4,13 @@ from django import forms
 from .models import Profile
 
 class UserInfoForm(forms.ModelForm):
-  phone = forms.CharField(label="", widget=forms.TextInput(attrs={'class':'form-control', 'placeholder': 'Phone'}), required=False)
-  address = forms.CharField(label="", widget=forms.TextInput(attrs={'class':'form-control', 'placeholder': 'Địa Chỉ'}), required=False)
-  city = forms.CharField(label="", widget=forms.TextInput(attrs={'class':'form-control', 'placeholder': 'Thành Phố'}), required=False)
-  state = forms.CharField(label="", widget=forms.TextInput(attrs={'class':'form-control', 'placeholder': 'Tỉnh'}), required=False)
-  zipcode = forms.CharField(label="", widget=forms.TextInput(attrs={'class':'form-control', 'placeholder': 'Mã Vùng'}), required=False)
-  country = forms.CharField(label="", widget=forms.TextInput(attrs={'class':'form-control', 'placeholder': 'Quốc Gia'}), required=False)
+  phone = forms.CharField(label="", widget=forms.TextInput(attrs={'class':'form-control', 'placeholder': 'Số Điện Thoại'}), required=False)
+  bank = forms.CharField(label="", widget=forms.TextInput(attrs={'class':'form-control', 'placeholder': 'Tên Ngân Hàng'}), required=False)
+  card_number = forms.CharField(label="", widget=forms.TextInput(attrs={'class':'form-control', 'placeholder': 'Số Thẻ'}), required=False)
   
   class Meta:
     model = Profile
-    fields = ('phone', 'address', 'city', 'state', 'zipcode', 'country')
+    fields = ('phone', 'bank', 'card_number')
 
 class UpdateUserForm(UserChangeForm):
   password = None

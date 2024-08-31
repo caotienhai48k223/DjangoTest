@@ -6,6 +6,7 @@ from django.contrib.auth.models import User
 from django.contrib import messages
 from myapp.models import Product, Profile
 import datetime
+from django.utils import timezone
 # Create your views here.
 def checkout(request):
   title = 'Thanh Toán'
@@ -30,12 +31,17 @@ def billing_info(request):
     totals = cart.cart_total()
     my_shipping = request.POST
     request.session['my_shipping'] = my_shipping
-    if request.user.is_authenticated:
-      billing_form = PaymentForm()
-      return render(request, 'pages/payments/billing_info.html', {'cart_products': cart_products, 'quantities': quantities, 'totals': totals, 'shipping_info': request.POST, 'billing_form': billing_form, 'title': title})
-    else:
-      billing_form = PaymentForm()
-      return render(request, 'pages/payments/billing_info.html', {'cart_products': cart_products, 'quantities': quantities, 'totals': totals, 'shipping_info': request.POST, 'billing_form': billing_form, 'title': title})
+    check_payment_type = request.POST.get('shipping_payment_type')
+    check_card_number = request.POST.get('shipping_card_number')
+    check_bank = request.POST.get('shipping_bank')
+    if check_payment_type == 'card' and (not check_card_number or not check_bank):
+      messages.success(request, 'Vui lòng điền thông tin thanh toán')
+      return redirect ('checkout')
+    else: 
+      if request.user.is_authenticated:
+        return render(request, 'pages/payments/billing_info.html', {'cart_products': cart_products, 'quantities': quantities, 'totals': totals, 'shipping_info': request.POST, 'title': title})
+      else:
+        return render(request, 'pages/payments/billing_info.html', {'cart_products': cart_products, 'quantities': quantities, 'totals': totals, 'shipping_info': request.POST, 'title': title})
   else:
     return redirect('index')
 
@@ -46,16 +52,25 @@ def process_order(request):
     quantities = cart.get_quants
     totals = cart.cart_total()
     
-    payment_form = PaymentForm(request.POST or None)
     my_shipping = request.session.get('my_shipping')
     full_name = my_shipping['shipping_full_name']
-    email = my_shipping['shipping_email']
-    shipping_address = f"{my_shipping['shipping_address']}\n{my_shipping['shipping_city']}\n{my_shipping['shipping_state']}"
+    phone = my_shipping['shipping_phone']
+    shipping_address = f"{my_shipping['shipping_address']} - {my_shipping['shipping_city']} - {my_shipping['shipping_state']}"
+    payment_method = my_shipping['shipping_payment_type']
+    if payment_method == 'card':
+      payment_method = 'Thanh Toán Chuyển Khoản Ngân Hàng'
+      card_number = my_shipping['shipping_card_number']
+      bank = my_shipping['shipping_bank']
+    else:
+      payment_method = 'Thanh Toán Khi Nhận Hàng'
+      card_number = ""
+      bank = ""
     amount_paid = totals
+    now = timezone.make_aware(datetime.datetime.now())
     
     if request.user.is_authenticated:
       user = request.user 
-      create_order = Order(user=user, full_name=full_name, email=email, shipping_address=shipping_address, amount_paid=amount_paid)
+      create_order = Order(user=user, full_name=full_name, phone=phone, shipping_address=shipping_address, payment_method=payment_method, card_number=card_number, bank=bank, amount_paid=amount_paid, date_ordered=now)
       create_order.save()
       order_id = create_order.pk
       for item in cart_products():
@@ -76,7 +91,7 @@ def process_order(request):
       messages.success(request, 'Đặt Hàng Thành Công')
       return redirect('index')
     else:
-      create_order = Order(full_name=full_name, email=email, shipping_address=shipping_address, amount_paid=amount_paid)
+      create_order = Order(full_name=full_name, phone=phone, shipping_address=shipping_address, payment_method=payment_method, card_number=card_number, bank=bank, amount_paid=amount_paid, date_ordered=now)
       create_order.save()
       order_id = create_order.pk
       for item in cart_products():
@@ -104,7 +119,7 @@ def unshipped_tab(request):
     if request.POST:
       num = request.POST['num']
       order = Order.objects.filter(id=num)
-      now = datetime.datetime.now()
+      now = timezone.make_aware(datetime.datetime.now())
       order.update(shipped=True, date_shipped=now)
       messages.success(request, 'Cập Nhật Thành Công')
       return redirect('/account/')

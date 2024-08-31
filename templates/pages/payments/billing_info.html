@@ -1,4 +1,5 @@
 {% extends 'layouts/default.html' %}
+{% load static %}  
 
 {% block main %}
   <div>Thông Tin Đơn Hàng</div>
@@ -31,21 +32,25 @@
   <h3>Thông Tin Vận Chuyển</h3>
   <div>  
     Họ Tên: {{ shipping_info.shipping_full_name }} <br><br>
-    Địa Chỉ Email: {{ shipping_info.shipping_email }} <br><br>
+    Số Điện Thoại: {{ shipping_info.shipping_phone }} <br><br>
     Địa Chỉ: {{ shipping_info.shipping_address }} <br><br>
     Thành Phố: {{ shipping_info.shipping_city }} <br><br>
     Tỉnh: {{ shipping_info.shipping_state }} <br><br>
+    Phương Thức Thanh Toán: {% if shipping_info.shipping_payment_type == 'card' %} Thanh Toán Chuyển Khoản Ngân Hàng {% else %} Thanh Toán Khi Nhận Hàng {% endif %} <br><br>
+    {% if shipping_info.shipping_payment_type == 'card' %}
+    <span card-number>Số Thẻ: {{ shipping_info.shipping_card_number }}</span> <br><br>
+    <span>Ngân Hàng: {{ shipping_info.shipping_bank }}</span> <br><br>
+    {% endif %}
   </div>
-  <a href="/payment/checkout/" class="btn btn-primary">Chỉnh Sửa Địa Chỉ</a>
+  <a href="/payment/checkout/" class="btn btn-primary">Chỉnh Sửa Thông Tin</a>
   <br><br>
-  <h3>Thông Tin Thanh Toán</h3>
   <div>
-    <form action="/payment/process_order/" method="POST">
+    <form form-cash action="/payment/process_order/" method="POST">
       {% csrf_token %}
-      {{ billing_form.as_p }}
-      <button type="submit" class="btn btn-success">Mua Ngay</button>
     </form>
+    <button button-buy class="btn btn-success">Xác Nhận Mua Hàng</button>
   </div>
+
 
 {% endblock %}
 

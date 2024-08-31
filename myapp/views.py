@@ -104,7 +104,6 @@ def update_info(request):
 
 def category(request, cat):
   cat = slugify(cat)
-  print(cat)
   category = Category.objects.filter(slug__icontains=cat).first()
   if category:
     products = Product.objects.filter(category=category)

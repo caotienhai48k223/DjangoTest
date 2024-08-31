@@ -29,7 +29,7 @@ SECRET_KEY = config('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = config('DEBUG', cast=bool)
 
-ALLOWED_HOSTS = config("ALLOWED_HOSTS").split(",")
+ALLOWED_HOSTS = []
 
 
 # Application definition
@@ -82,17 +82,10 @@ WSGI_APPLICATION = 'myproject.wsgi.application'
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': config('DATABASE_NAME'),
-        'USER': config('DATABASE_USER'),
-        'PASSWORD': config('DATABASE_PASSWORD'),
-        'HOST': config('DATABASE_HOST'),
-        'PORT': config('DATABASE_PORT')
-    }
+    'default': dj_database_url.parse(config('DATABASE_URL'))
 }
 
-DATABASES['default'] = dj_database_url.parse(config('DATABASE_URL'))
+# DATABASES['default'] = dj_database_url.parse(config('DATABASE_URL'))
 
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators

@@ -35,7 +35,7 @@
   </head>
   <body>
   {% include '../partials/header.html'%} 
-    <main style="padding-top: 116.4px;">
+    <main style="padding-top: 116.4px; position: relative; z-index: 1;">
       {% block main %} {% endblock %} 
     </main>
   {% include '../partials/footer.html' %}
@@ -49,6 +49,26 @@
             name="keyword"
           />
           <button class="btn btn-success" type="submit">Search</button>
+        </form>
+      </div>
+    </div>
+    <div payment-img class="payment-card d-none">
+      <div class="x-mark-div">
+        <i class="fa-regular fa-circle-xmark x-icon-img"></i>
+      </div>
+      <div class="content-payment-div">
+        <center>
+          <div class="note-payment">
+            <p><strong>Vui Lòng Quét Mã Bên Dưới Để Chuyển Khoản</strong></p>
+            <i>Nội dung chuyển khoản:  'Họ Tên + Số Điện Thoại'</i>
+          </div>
+          <div class="payment-img">
+            <img src="{% static 'images/paymentimg.jpg' %}" alt="Ảnh Thanh Toán">
+          </div>
+        </center>
+        <form action="/payment/process_order/" method="POST" class="btn-payment-div">
+          {% csrf_token %}
+          <button class="btn btn-outline-success" confirm-payment style="text-decoration: none">Đã Thanh Toán</button>
         </form>
       </div>
     </div>

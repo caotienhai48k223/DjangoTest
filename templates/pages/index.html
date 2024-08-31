@@ -5,11 +5,6 @@
     <div>{{message}}</div>
   {% endfor %}
   <h1>Welcome to web</h1>
-  {% for variant in variants %}
-    <div>{{variant.id}}</div>
-    <div>{{variant}}</div>
-    <div>{{variant.product.sale_price}}</div>
-  {% endfor %}
   {% for product in products %}
   <div class="product-container">
     <a href="/products/{{product.slug}}">{{product.title}}</a>

@@ -10,7 +10,7 @@
               Đơn Hàng {{order.id}} --- {{order.amount_paid}} VNĐ
             </div>
             <div class="card-body">
-              Email: {{order.email}}
+              Số Điện Thoại: {{order.phone}}
               <br>
               Ngày Đặt Hàng: {{order.date_ordered}}
               {% if order.shipped %}
@@ -23,8 +23,9 @@
               <br>
               Họ Tên: {{order.full_name}}
               <br>
-              Địa Chỉ: <pre>{{order.shipping_address}}</pre>
-              
+              Địa Chỉ: {{order.shipping_address}} <br>
+              Phương Thức Thanh Toán: {{ order.payment_method }} <br>
+              {% if order.card_number %} Số Thẻ: {{ order.card_number }} <br> Ngân Hàng: {{ order.bank }} <br> {% endif %}
               Chi Tiết Đơn Hàng: <br> 
               {% for item in items %}
                 {{item.product_variant}} -- Số Lượng: {{item.quantity}} -- Giá: {{item.price}} VNĐ <br>
