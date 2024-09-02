@@ -21,6 +21,15 @@
       </div>
       <div class="col-8">
         <img img_main src="{{img_main}}" width="200px" alt="">
+        <br>
+        <div>
+          {% for review in reviews %}
+            Khách Hàng: {{review.user}} <br>
+            Sản Phẩm: {{review.product_variant}} <br>
+            Đánh Giá: {{review.rating}} ⭐ <br>
+            Bình Luận: {{review.content}}
+          {% endfor %}
+        </div>
       </div>
     </div>
     <div class="col-4">

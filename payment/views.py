@@ -1,10 +1,10 @@
 from django.shortcuts import render, redirect
 from cart.cart import Cart
-from payment.forms import ShippingForm, PaymentForm
+from payment.forms import ShippingForm, ProductReviewForm
 from payment.models import ShippingAddress, Order, OrderItem
 from django.contrib.auth.models import User
 from django.contrib import messages
-from myapp.models import Product, Profile
+from myapp.models import Product, Profile, ProductVariant, ProductReview
 import datetime
 from django.utils import timezone
 # Create your views here.
@@ -112,8 +112,35 @@ def process_order(request):
   else:
     return redirect('index')
 
-def unshipped_tab(request):
+def my_order(request):
   if request.user.is_authenticated:
+    title = 'Đơn Hàng Của Tôi'
+    items = OrderItem.objects.filter(user_id=request.user.id)
+    items_unshipped = []
+    items_shipped = []
+    form_review = ProductReviewForm()
+    for item in items:
+      if item.order.shipped:
+        items_shipped.append(item)
+      else:
+        items_unshipped.append(item)
+    reviewed = ProductReview.objects.filter(user=request.user).values_list('product_variant', flat=True)    
+    if request.POST:
+      user = request.user
+      variant_id = request.POST['variant_id']
+      variant = ProductVariant.objects.get(id=variant_id)
+      product = variant.product
+      rating = request.POST['rating']
+      content = request.POST['content']
+      new_review = ProductReview.objects.create(product=product, product_variant=variant, user=user, rating=rating, content=content)
+      new_review.save()
+      return redirect('/account/')
+    return render(request, 'pages/dashboards/my_order.html', {'title':title, 'items_shipped': items_shipped, 'items_unshipped': items_unshipped, 'form_review': form_review, 'reviewed': reviewed})
+  else:
+    return redirect('/login/')
+
+def unshipped_tab(request):
+  if request.user.is_superuser:
     title = 'Đơn Hàng Đang Vận Chuyển'
     orders = Order.objects.filter(shipped=False)
     if request.POST:

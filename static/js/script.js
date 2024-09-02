@@ -53,9 +53,11 @@ if (cardNumber) {
 } else {
   const formCash = document.querySelector('[form-cash]')
   const buttonBuy = document.querySelector('[button-buy]')
-  buttonBuy.addEventListener('click', () => {
-    formCash.submit()
-  })
+  if (buttonBuy){
+    buttonBuy.addEventListener('click', () => {
+      formCash.submit()
+    })
+  }
 }
 
 const cancelPayment = document.querySelector('.x-icon-img')
@@ -75,3 +77,4 @@ if (formPaymentSuccess) {
     }
   })
 }
+

@@ -29,7 +29,7 @@ post_save.connect(create_shipping_address, sender=User)
   
 
 class Order(models.Model):
-  user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True, related_name="orders_shipping")
+  user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
   full_name = models.CharField(max_length=250)
   phone = models.EmailField(max_length=250)
   shipping_address = models.TextField(max_length=15000)

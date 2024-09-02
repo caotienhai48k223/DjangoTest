@@ -1,16 +1,20 @@
 from django.contrib import admin
-from .models import Product, Message, Room, Order, Category, Customer, Profile, ProductVariant
+from .models import Product, Message, Room, Category, Profile, ProductVariant, ProductReview
 from django.utils.html import format_html
 from django.contrib.auth.models import User
 
 # Register your models here.
 class ProductVariantInline(admin.TabularInline):
   model = ProductVariant
-  extra = 1  # Số lượng form biến thể trống sẽ hiển thị thêm khi tạo mới
-  
+  extra = 1  
+
+class ProductReviewInline(admin.TabularInline):
+  model = ProductReview
+  extra = 0
+
 class ProductAdmin(admin.ModelAdmin):
   list_display = ('title', 'category', 'image_preview', 'price')
-  inlines = [ProductVariantInline]
+  inlines = [ProductVariantInline,  ProductReviewInline]
   search_fields = ('title', 'category__name')
   prepopulated_fields = {'slug': ('title',)}
   list_filter = ('category', 'is_sale', 'created_date')
@@ -21,10 +25,8 @@ class ProductAdmin(admin.ModelAdmin):
   image_preview.short_description = 'Image Preview'
   
   
-admin.site.register(Customer)
 admin.site.register(Category)
 admin.site.register(Product, ProductAdmin)
-admin.site.register(Order)
 admin.site.register(Profile)
 admin.site.register(Room)
 admin.site.register(Message)

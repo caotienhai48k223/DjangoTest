@@ -5,12 +5,13 @@ from .models import Profile
 
 class UserInfoForm(forms.ModelForm):
   phone = forms.CharField(label="", widget=forms.TextInput(attrs={'class':'form-control', 'placeholder': 'Số Điện Thoại'}), required=False)
+  birth_date = forms.DateField(label="", widget=forms.DateInput(attrs={'class':'form-control', 'type': 'date'}), required=False)
   bank = forms.CharField(label="", widget=forms.TextInput(attrs={'class':'form-control', 'placeholder': 'Tên Ngân Hàng'}), required=False)
   card_number = forms.CharField(label="", widget=forms.TextInput(attrs={'class':'form-control', 'placeholder': 'Số Thẻ'}), required=False)
   
   class Meta:
     model = Profile
-    fields = ('phone', 'bank', 'card_number')
+    fields = ('phone', 'birth_date', 'bank', 'card_number')
 
 class UpdateUserForm(UserChangeForm):
   password = None

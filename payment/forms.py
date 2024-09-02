@@ -1,5 +1,6 @@
 from django import forms
 from .models import ShippingAddress
+from myapp.models import ProductReview
 
 class ShippingForm(forms.ModelForm):
   PAYMENT_CHOICES = [('cash', 'Thanh Toán Khi Nhận Hàng'), ('card', 'Thanh Toán Chuyển Khoản Ngân Hàng'),]
@@ -17,8 +18,11 @@ class ShippingForm(forms.ModelForm):
     fields = ['shipping_full_name', 'shipping_phone', 'shipping_address', 'shipping_city', 'shipping_state', 'shipping_payment_type', 'shipping_card_number', 'shipping_bank']
     exclude = ['user', ]
     
-
-
-class PaymentForm(forms.Form):
-  cart_number = forms.CharField(label="", widget=forms.TextInput(attrs={'class':'form-control', 'placeholder': 'Số Tài Khoản'}), required=True)
-  bank_name = forms.CharField(label="", widget=forms.TextInput(attrs={'class':'form-control', 'placeholder': 'Tên Ngân Hàng'}), required=True)
+class ProductReviewForm(forms.ModelForm):
+  STAR_CHOICES = [('1', '⭐'), ('2', '⭐⭐'), ('3', '⭐⭐⭐'), ('4', '⭐⭐⭐⭐'), ('5', '⭐⭐⭐⭐⭐')]
+  rating = forms.ChoiceField(label="Đánh Giá", choices=STAR_CHOICES, widget=forms.Select(attrs={'id': 'star-review', 'class':'form-select text-center'}), initial='5', required=True)
+  content = forms.CharField(label='Bình Luận', widget=forms.Textarea(attrs={'class':'form-control'}), required=True)
+  
+  class Meta:
+    model = ProductReview
+    fields = ['rating', 'content']

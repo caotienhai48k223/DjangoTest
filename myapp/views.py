@@ -1,12 +1,11 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from django.http import HttpResponse, JsonResponse, HttpResponseRedirect
+from django.http import HttpResponse, JsonResponse
 from django.contrib.auth.models import User, auth
 from django.contrib import messages
 from .models import Product, Room, Message, Category, Profile, ProductVariant
 from .forms import SignUpForm, UpdateUserForm, UserInfoForm
 from payment.forms import ShippingForm
 from payment.models import ShippingAddress
-from django.contrib.auth.forms import AuthenticationForm
 from django.db.models import OuterRef, Subquery
 from django.utils.text import slugify
 from django.utils import timezone
@@ -124,6 +123,7 @@ def product_detail(request, slug):
   product = get_object_or_404(Product, slug=slug)
   title = product.title
   variants = product.variants.all()
+  reviews = product.reviews.all()
   colors = variants.values_list('color', flat=True).distinct()
   sizes = variants.values_list ('size', flat=True).distinct()[::-1]
   if None in colors:
@@ -132,7 +132,7 @@ def product_detail(request, slug):
     sizes = []
   images = product.images
   img_main = images[0]
-  return render(request, 'pages/products/product_detail.html', { 'title': title, 'product': product, 'colors': colors, 'sizes': sizes, 'images': images, 'img_main':img_main})
+  return render(request, 'pages/products/product_detail.html', { 'title': title, 'product': product, 'colors': colors, 'sizes': sizes, 'images': images, 'img_main':img_main, 'reviews': reviews})
 
 def search(request):
   keyword = request.GET.get('keyword', '')

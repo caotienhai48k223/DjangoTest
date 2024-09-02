@@ -43,7 +43,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'myapp.apps.MyappConfig',
     'cart',
-    'payment',
+    'payment'
 ]
 
 MIDDLEWARE = [

@@ -11,6 +11,7 @@ class Profile(models.Model):
   user = models.OneToOneField(User, on_delete=models.CASCADE)
   date_modified = models.DateTimeField(User, auto_now=True)
   phone = models.CharField(max_length=20, blank=True)
+  birth_date = models.DateField(blank=True, null=True)
   bank = models.CharField(max_length=100, blank=True)
   card_number = models.CharField(max_length=20, blank=True)
   old_cart = models.CharField(max_length=200, blank=True, null=True)
@@ -24,16 +25,6 @@ def create_profile(sender, instance, created, **kwargs):
     user_profile.save()
 post_save.connect(create_profile, sender=User)
 
-
-class Customer(models.Model):
-  first_name = models.CharField(max_length=100)
-  last_name = models.CharField(max_length=100)
-  phone = models.CharField(max_length=20)
-  email = models.EmailField(max_length=150)
-  password = models.CharField(max_length=100)
-  
-  def __str__(self):
-    return f'{self.first_name} {self.last_name}'
 
 class Category(models.Model):
   name = models.CharField(max_length=100)
@@ -98,16 +89,16 @@ class ProductVariant(models.Model):
     return f"{self.product.title} - {self.color} - {self.size}"
 
 
+class ProductReview(models.Model):
+    product = models.ForeignKey(Product, related_name='reviews', on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    product_variant = models.ForeignKey(ProductVariant, on_delete=models.CASCADE, blank=True, null=True)
+    rating = models.PositiveIntegerField(default=1, choices=[(i, i) for i in range(1, 6)])  # 1 to 5 stars
+    content = models.TextField(blank=True, null=True)
+    created_date = models.DateTimeField(auto_now_add=True)
 
-class Order(models.Model):
-  product = models.ForeignKey(Product, on_delete=models.CASCADE)
-  customer = models.ForeignKey(User, on_delete=models.CASCADE)
-  quantity = models.IntegerField(default=1)
-  address = models.CharField(max_length= 100, default='', blank=True)
-  phone = models.CharField(max_length=20, default='', blank=True)
-  date = models.DateField(default=datetime.now)
-  status = models.BooleanField(default=False)
-
+    def __str__(self):
+        return f"Đánh giá sản phẩm {self.product.title} từ khách hàng {self.user.username}"
 
 
 
