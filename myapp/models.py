@@ -14,6 +14,7 @@ class Profile(models.Model):
   birth_date = models.DateField(blank=True, null=True)
   bank = models.CharField(max_length=100, blank=True)
   card_number = models.CharField(max_length=20, blank=True)
+  recently_viewed = ArrayField(models.IntegerField(), blank=True, default=list)
   old_cart = models.CharField(max_length=200, blank=True, null=True)
   
   def __str__(self):
@@ -37,14 +38,27 @@ class Category(models.Model):
   def __str__(self):
       return self.name
 
-  
+
+class Collection(models.Model):
+  name = models.CharField(max_length=100)
+  slug = models.SlugField(max_length=220, unique=True, blank=True)
+  def save(self, *args, **kwargs):
+    if not self.slug:
+      self.slug = slugify(self.name)
+    super(Collection, self).save(*args, **kwargs)
+    
+  def __str__(self):
+      return self.name
+
+
 class Product(models.Model):
   title = models.CharField(max_length=200)
   category = models.ForeignKey(Category, on_delete=models.CASCADE)
+  collection = models.ForeignKey(Collection, on_delete=models.CASCADE, null=True, blank=True)
   slug = models.SlugField(max_length=220, unique=True, blank=True)
-  thumbnail= models.URLField(max_length=500, blank=True, null=True)
   description = models.TextField()
-  images = ArrayField(models.URLField(), blank=True, null=True, default=list)
+  image_1 = models.URLField(max_length=500, blank=True, null=True)
+  image_2 = models.URLField(max_length=500, blank=True, null=True)
   size_chart = models.URLField(default='https://product.hstatic.net/200000284249/product/size_chart_2024_1536_x_2048_38b45007e2974e3dbc65d20e73557f89_master.jpg', null=True, blank=True)
   price = models.DecimalField(max_digits=10, decimal_places=0)
   created_date = models.DateTimeField(auto_now_add=True, blank=True)
@@ -61,7 +75,7 @@ class Product(models.Model):
   def save(self, *args, **kwargs):
     if not self.slug:
       self.slug = slugify(self.title)
-    if self.discount:
+    if self.discount and not self.sale_price:
       self.sale_price = self.price - (self.discount / 100) * self.price
     self.clean()
     super(Product, self).save(*args, **kwargs)
@@ -77,6 +91,10 @@ class ProductVariant(models.Model):
   quantity = models.DecimalField(max_digits=10, decimal_places=0, null=True)
   q_purchase = models.DecimalField(max_digits=10, decimal_places=0, null=True, default=0, blank=True)
   stock = models.DecimalField(max_digits=10, decimal_places=0, null=True, blank=True)
+  image_1 = models.URLField(max_length=500, blank=True, null=True)
+  image_2 = models.URLField(max_length=500, blank=True, null=True)
+  image_3 = models.URLField(max_length=500, blank=True, null=True)
+  image_4 = models.URLField(max_length=500, blank=True, null=True)
   status = models.BooleanField(default=True)
 
   def save(self, *args, **kwargs):

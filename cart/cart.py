@@ -14,7 +14,7 @@ class Cart():
     variant_id = str(variant)
     variant_qty = str(quantity)
     if variant_id in self.cart:
-      pass
+      self.cart[variant_id] += int(variant_qty)
     else:
       self.cart[variant_id] = int(variant_qty)
     self.session.modified = True
@@ -29,7 +29,7 @@ class Cart():
     variant_id = str(variant.id)
     variant_qty = str(quantity)
     if variant_id in self.cart:
-      pass
+      self.cart[variant_id] += int(variant_qty)
     else:
       self.cart[variant_id] = int(variant_qty)
     self.session.modified = True

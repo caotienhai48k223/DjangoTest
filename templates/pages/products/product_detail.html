@@ -1,147 +1,233 @@
-{% extends 'layouts/default.html' %}
-
-{% block main %}
-
-  {%for message in messages%}
-  <div>{{message}}</div>
-  {% endfor %}
-  <div class="product-container row">
-    <div class="col-8 row">
-      <div class="col-4">
-      {% for image in images %}
-        <div class="col-4">
-          <img img_secondary src="{{image}}" width="100px" height="auto" style="cursor: pointer;" alt="Ảnh Biến Thể">
+{% extends 'layouts/default.html' %} {% block main %} {%for message in
+messages%}
+<div>{{message}}</div>
+{% endfor %}
+<div class="product-container" style="display: flex; justify-content: center">
+  <div class="col-12 row">
+    <div class="col-9">
+      <img img_main src="{{product.image_main}}" width="350px" alt="" />
+      <div class="d-flex col-12" style="overflow: hidden">
+        {% for image in product.images %}
+        <div class="col-1">
+          <img
+            img_secondary
+            src="{{image}}"
+            width="100px"
+            height="auto"
+            style="cursor: pointer"
+            alt="Ảnh Biến Thể"
+          />
         </div>
-      {% endfor %}
-      {% if product.size_chart %}
-        <div class="col-4">
-          <img img_secondary src="{{product.size_chart}}" width="100px" height="auto" style="cursor: pointer;" alt="Hướng Dẫn Chọn Size">
+        {% endfor %} {% if product.size_chart %}
+        <div class="col-1">
+          <img
+            img_secondary
+            src="{{product.size_chart}}"
+            width="100px"
+            height="auto"
+            style="cursor: pointer"
+            alt="Hướng Dẫn Chọn Size"
+          />
         </div>
-      {% endif %}
-      </div>
-      <div class="col-8">
-        <img img_main src="{{img_main}}" width="200px" alt="">
-        <br>
-        <div>
-          {% for review in reviews %}
-            Khách Hàng: {{review.user}} <br>
-            Sản Phẩm: {{review.product_variant}} <br>
-            Đánh Giá: {{review.rating}} ⭐ <br>
-            Bình Luận: {{review.content}}
-          {% endfor %}
-        </div>
+        {% endif %}
       </div>
     </div>
-    <div class="col-4">
-      <p>{{product.title}}</p>
-      <p>{{product.price}}</p>
-      {% if colors %}
-      <div class="hihi">
-        <h5>Chọn Màu</h5>
-        {% for color in colors %}
-          <button select_color class="{% if forloop.first %}btn btn-outline-dark active{% else %}btn btn-outline-dark{% endif %}">{{color}}</button>
-        {% endfor %}
-        <input class="d-none" id="color-cart" value="">
-      </div>
-      {% endif %}
+    <div class="col-3">
+      <center>
+        <p>{{product.title}}</p>
+        <p>{{product.price}}</p>
+        {% if colors %}
+        <div class="hihi">
+          <h5>Chọn Màu</h5>
+          {% for color in colors %}
+          <button
+            select_color
+            class="{% if forloop.first %}btn btn-outline-dark active{% else %}btn btn-outline-dark{% endif %}"
+          >
+            {{color}}
+          </button>
+          {% endfor %}
+          <input class="d-none" id="color-cart" value="" />
+        </div>
+        {% endif %} {% if sizes %}
+        <div class="huhu">
+          <h5>Chọn Size</h5>
+          {% for size in sizes%}
+          <button
+            select_size
+            class="{% if forloop.first %}btn btn-outline-dark active{% else %}btn btn-outline-dark{%endif%}"
+          >
+            {{size}}
+          </button>
+          {% endfor %}
+          <input class="d-none" id="size-cart" value="" />
+        </div>
+        {% endif %}
+        <div>
+          <input
+            type="number"
+            style="width: 100px"
+            class="form-control"
+            id="qty-cart"
+            value="1"
+            min="1"
+          />
+        </div>
+        <button
+          class="btn btn-outline-primary"
+          value="{{product.id}}"
+          id="add-cart"
+        >
+          Thêm Giỏ Hàng
+        </button>
+        <br />
+        <button
+          class="btn btn-outline-danger"
+          value="{{product.id}}"
+          id="buy-now"
+        >
+          Mua Ngay
+        </button>
+      </center>
+      <br />
+    </div>
 
-      {% if sizes %}
-      <div class="huhu">
-        <h5>Chọn Size</h5>
-        {% for size in sizes%}
-          <button select_size class="{% if forloop.first %}btn btn-outline-dark active{% else %}btn btn-outline-dark{%endif%}">{{size}}</button>
+    <div class="col-10">
+      <br />
+      <center>
+        <div>
+          <h3>Đánh giá từ khách hàng</h3>
+          {% for review in reviews %} Khách Hàng: {{review.user}} <br />
+          Sản Phẩm: {{review.product_variant}} <br />
+          Đánh Giá: {{review.rating}} ⭐ <br />
+          Bình Luận: {{review.content}} {% endfor %}
+        </div>
+        <br />
+        <h3>Có Thể bạn Quan Tâm</h3>
+        <br />
+        {% for item in recommend_list %} {{item.title}}
+        <img
+          img-2="{{item.image_2}}"
+          img-1="{{item.image_1}}"
+          src="{{item.image_1}}"
+          width="100px"
+          height="auto"
+          alt="Ảnh Sản Phẩm"
+        />
+        {{item.price}} {% endfor %}
+        <br />
+        <h3>Sản phẩm đã xem</h3>
+        {% for product in viewed_products%}
+        <img src="{{product.image_1}}" alt="" width="100px" height="auto" />
         {% endfor %}
-        <input class="d-none" id="size-cart" value="">
-      </div>
-      {% endif %}
-      <div>
-        <input type="number" style="width: 100px;" class="form-control" id="qty-cart" value="1" min="1">
-      </div>
-      <button class="btn btn-success" value="{{product.id}}" id="add-cart">Add To Cart</button>
+      </center>
     </div>
   </div>
+</div>
 
+<script>
+  const imgMain = document.querySelector("[img_main]");
+  const imgSecondary = document.querySelectorAll("[img_secondary]");
+  if (imgMain && imgSecondary) {
+    imgSecondary.forEach((img) => {
+      img.addEventListener("click", () => {
+        const linkImgSecondary = img.getAttribute("src");
+        imgMain.setAttribute("src", linkImgSecondary);
+      });
+    });
+  }
 
-  <script>
-    const imgMain = document.querySelector('[img_main]')
-    const imgSecondary = document.querySelectorAll('[img_secondary]')
-    if (imgMain && imgSecondary) {
-      imgSecondary.forEach((img) => {
-        img.addEventListener('click', () => {
-          const linkImgSecondary = img.getAttribute('src')
-          imgMain.setAttribute('src', linkImgSecondary)
-        })
-      })
-    }
-
-
-
-    const buttonColors = document.querySelectorAll('[select_color]')
-    const colorInput = document.querySelector('#color-cart')
-    if (buttonColors.length > 0) {
-      buttonColors.forEach((button) => {
-        const classActive = button.getAttribute('class')
-        if (classActive.includes('active')) {
-          colorInput.value = button.textContent.trim()
-        }
-        button.addEventListener('click', () => {
-          buttonColors.forEach((btn) => btn.classList.remove('active'));
-          button.classList.add('active')
-          colorInput.value = button.textContent.trim()
-        })
-      })
-    }
-
-    const buttonSizes = document.querySelectorAll('[select_size]')
-    const sizeInput = document.querySelector('#size-cart')
-    if (buttonSizes.length > 0) {
-      buttonSizes.forEach((button) => {
-        const classActive = button.getAttribute('class')
-        if (classActive.includes('active')) {
-          sizeInput.value = button.textContent.trim()
-        }
-        button.addEventListener('click', () => {
-          buttonSizes.forEach((btn) => btn.classList.remove('active'));
-          button.classList.add('active')
-          sizeInput.value = button.textContent.trim()
-        })
-      })
-    }
-
-
-
-
-    $(document).on('click', '#add-cart', function(e){
-      e.preventDefault();
-      var product_id = $('#add-cart').val();
-      var product_qty = $('#qty-cart').val();
-      var product_color = $('#color-cart').length ? $('#color-cart').val() : null;
-      var product_size = $('#size-cart').length ? $('#size-cart').val() : null;
-      var data = {
-        product_id: product_id,
-        product_qty: product_qty,
-        csrfmiddlewaretoken: '{{ csrf_token }}',
-        action: 'post'
-      };
-      if (product_color !== null) {
-        data.product_color = product_color;
+  const buttonColors = document.querySelectorAll("[select_color]");
+  const colorInput = document.querySelector("#color-cart");
+  if (buttonColors.length > 0) {
+    buttonColors.forEach((button) => {
+      const classActive = button.getAttribute("class");
+      if (classActive.includes("active")) {
+        colorInput.value = button.textContent.trim();
       }
-      if (product_size !== null) {
-        data.product_size = product_size;
-      }
-      console.log(data)
-      $.ajax({
-        type:'POST',
-        url:"{% url 'cart-add' %}",
-        data: data,
-        success: function(json){          
-          location.reload()
-        },
-        error: function(xhr, errmsg, err){
+      button.addEventListener("click", () => {
+        buttonColors.forEach((btn) => btn.classList.remove("active"));
+        button.classList.add("active");
+        colorInput.value = button.textContent.trim();
+      });
+    });
+  }
 
-        }
-      })
-    })
-  </script>
-  
+  const buttonSizes = document.querySelectorAll("[select_size]");
+  const sizeInput = document.querySelector("#size-cart");
+  if (buttonSizes.length > 0) {
+    buttonSizes.forEach((button) => {
+      const classActive = button.getAttribute("class");
+      if (classActive.includes("active")) {
+        sizeInput.value = button.textContent.trim();
+      }
+      button.addEventListener("click", () => {
+        buttonSizes.forEach((btn) => btn.classList.remove("active"));
+        button.classList.add("active");
+        sizeInput.value = button.textContent.trim();
+      });
+    });
+  }
+
+  $(document).on("click", "#add-cart", function (e) {
+    e.preventDefault();
+    var product_id = $("#add-cart").val();
+    var product_qty = $("#qty-cart").val();
+    var product_color = $("#color-cart").length ? $("#color-cart").val() : null;
+    var product_size = $("#size-cart").length ? $("#size-cart").val() : null;
+    var data = {
+      product_id: product_id,
+      product_qty: product_qty,
+      csrfmiddlewaretoken: "{{ csrf_token }}",
+      action: "post",
+    };
+    if (product_color !== null) {
+      data.product_color = product_color;
+    }
+    if (product_size !== null) {
+      data.product_size = product_size;
+    }
+    console.log(data);
+    $.ajax({
+      type: "POST",
+      url: "{% url 'cart-add' %}",
+      data: data,
+      success: function (json) {
+        location.reload();
+      },
+      error: function (xhr, errmsg, err) {},
+    });
+  });
+
+  $(document).on("click", "#buy-now", function (e) {
+    e.preventDefault();
+    var product_id = $("#add-cart").val();
+    var product_qty = $("#qty-cart").val();
+    var product_color = $("#color-cart").length ? $("#color-cart").val() : null;
+    var product_size = $("#size-cart").length ? $("#size-cart").val() : null;
+    var data = {
+      product_id: product_id,
+      product_qty: product_qty,
+      csrfmiddlewaretoken: "{{ csrf_token }}",
+      action: "post",
+    };
+    if (product_color !== null) {
+      data.product_color = product_color;
+    }
+    if (product_size !== null) {
+      data.product_size = product_size;
+    }
+    console.log(data);
+    $.ajax({
+      type: "POST",
+      url: "{% url 'cart-add' %}",
+      data: data,
+      success: function (json) {
+        window.location.href = "{% url 'checkout' %}";
+      },
+      error: function (xhr, errmsg, err) {},
+    });
+  });
+</script>
+
 {% endblock %}

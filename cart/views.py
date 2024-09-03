@@ -48,4 +48,3 @@ def cart_update(request):
     response = JsonResponse({'qty': variant_qty})
     messages.success(request, ("Cập nhật giỏ hàng thành công"))
     return response
-    # return redirect('cart_summary')

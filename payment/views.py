@@ -83,6 +83,9 @@ def process_order(request):
           if int(key) == variant_id:
             create_order_item = OrderItem(order_id=order_id, product_variant_id=variant_id, user=user, quantity=value, price=price )
             create_order_item.save()
+            variant = ProductVariant.objects.get(id=variant_id)
+            variant.q_purchase += value
+            variant.save()
       for key in list(request.session.keys()):
         if key == "session_key":
           del request.session[key]
@@ -104,6 +107,9 @@ def process_order(request):
           if int(key) == variant_id:
             create_order_item = OrderItem(order_id=order_id, product_variant_id=variant_id, quantity=value, price=price )
             create_order_item.save()
+            variant = ProductVariant.objects.get(id=variant_id)
+            variant.q_purchase += value
+            variant.save()
       for key in list(request.session.keys()):
         if key == "session_key":
           del request.session[key]

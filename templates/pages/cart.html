@@ -7,17 +7,20 @@
     {% endfor %}
     {% for item in cart_products%}
       {% if item.product.is_sale %}
-        <div>
-          Sản phẩm: {{item.product}} <br>
-          {% if item.color %}
-          Màu Sắc: {{item.color}} <br>
-          {% endif %}
-          {% if item.size %}
-          Size: {{item.size}} <br>
-          {% endif %}
-          Giá: {{item.product.sale_price}} <br>
+        <div class="d-flex">
+          <div>
+            Sản phẩm: {{item.product}} <br>
+            {% if item.color %}
+            Màu Sắc: {{item.color}} <br>
+            {% endif %}
+            {% if item.size %}
+            Size: {{item.size}} <br>
+            {% endif %}
+            Giá: {{item.product.sale_price}} <br>
+          </div>
+          <img src="{{item.image_1}}" width="100px" height="auto" alt="Ảnh Sản Phẩm">
         </div>
-          {% for key, value in quantities.items%}
+          {% for key, value in quantities.items %}
             {% if key == item.id|slugify %}
               <div class="input-group mb-3" style="width: 150px;">
                 <input type="number" class="form-control" id="qty_{{item.id}}" value="{{value}}" min="1" >
@@ -81,7 +84,6 @@
 
       $(document).on('click', '.delete-product', function(e){
         e.preventDefault();
-        // var productid = $(this).data('index')
         $.ajax({
           type:'POST',
           url:"{% url 'cart-delete' %}",
@@ -91,7 +93,6 @@
             action:'post'
           },
           success: function(json){
-            // document.getElementById('cart_quantity').textContent = json.qty
             location.reload()
           },
           error: function(xhr, errmsg, err){

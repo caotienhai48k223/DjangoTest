@@ -1,6 +1,5 @@
 from django.contrib import admin
-from .models import Product, Message, Room, Category, Profile, ProductVariant, ProductReview
-from django.utils.html import format_html
+from .models import Product, Message, Room, Category, Profile, ProductVariant, ProductReview, Collection
 from django.contrib.auth.models import User
 
 # Register your models here.
@@ -13,19 +12,14 @@ class ProductReviewInline(admin.TabularInline):
   extra = 0
 
 class ProductAdmin(admin.ModelAdmin):
-  list_display = ('title', 'category', 'image_preview', 'price')
+  list_display = ('title', 'category', 'price')
   inlines = [ProductVariantInline,  ProductReviewInline]
-  search_fields = ('title', 'category__name')
   prepopulated_fields = {'slug': ('title',)}
   list_filter = ('category', 'is_sale', 'created_date')
-  def image_preview(self, obj):
-      if obj.thumbnail:
-        return format_html('<img src="{}" width="50" height="auto" />'.format(obj.thumbnail))
-      return "No Image"
-  image_preview.short_description = 'Image Preview'
   
   
 admin.site.register(Category)
+admin.site.register(Collection)
 admin.site.register(Product, ProductAdmin)
 admin.site.register(Profile)
 admin.site.register(Room)

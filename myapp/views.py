@@ -11,14 +11,16 @@ from django.utils.text import slugify
 from django.utils import timezone
 import json
 from cart.cart import Cart
+from itertools import chain
+from .recently_viewed import RecentlyViewed
+from django.core.paginator import Paginator
 
 
 # Create your views here.
 def index(request):
   title = 'Trang Chủ'
-  products = Product.objects.all()
-  variants = ProductVariant.objects.all()
-  return render(request, 'pages/index.html', { 'products': products, 'title': title, 'variants': variants })
+  products= Product.objects.all()
+  return render(request, 'pages/index.html', { 'products': products, 'title': title })
 
 def register(request):
   if request.user.is_authenticated:
@@ -116,8 +118,11 @@ def products(request):
 
 def collections(request):
   title='Tất Cả Sản Phẩm'
-  products = Product.objects.all()
-  return render(request, 'pages/products/collections.html', { 'title': title, 'products': products })
+  products= Product.objects.all()
+  paginator = Paginator(products, 1)
+  page_number = request.GET.get('page')
+  page_obj = paginator.get_page(page_number)
+  return render(request, 'pages/products/collections.html', { 'title': title, 'page_obj': page_obj })
 
 def product_detail(request, slug):
   product = get_object_or_404(Product, slug=slug)
@@ -125,14 +130,37 @@ def product_detail(request, slug):
   variants = product.variants.all()
   reviews = product.reviews.all()
   colors = variants.values_list('color', flat=True).distinct()
-  sizes = variants.values_list ('size', flat=True).distinct()[::-1]
+  sizes = variants.values_list ('size', flat=True).distinct()
+  images = list(chain.from_iterable(variants.values_list('image_1', 'image_2', 'image_3', 'image_4').distinct()[::-1]))
+  product.images = images
+  product.image_main = images[0]
   if None in colors:
     colors = []
   if None in sizes:
     sizes = []
-  images = product.images
-  img_main = images[0]
-  return render(request, 'pages/products/product_detail.html', { 'title': title, 'product': product, 'colors': colors, 'sizes': sizes, 'images': images, 'img_main':img_main, 'reviews': reviews})
+  recommend_list = []
+  slug = slug.split('-')
+  if 2 < len(slug) < 6:
+    slug = slug[2:]
+    slug = '-'.join(slug[:2])
+    products_recommend = Product.objects.filter(slug__icontains=slug)
+    for product_rc in products_recommend:
+      if product_rc != product:
+        recommend_list.append(product_rc)
+    if len(recommend_list) < 6:
+      products_category = Product.objects.filter(category=product.category)
+      for product_cat in products_category:
+        if product_cat != product:
+          recommend_list.append(product_cat)   
+  else:         
+    products_category = Product.objects.filter(category=product.category)
+    for product_cat in products_category:
+      if product_cat != product and len(recommend_list) < 6:
+        recommend_list.append(product_cat)
+  recently_viewed = RecentlyViewed(request)
+  recently_viewed.add(product.id)
+  viewed_products = recently_viewed.get_viewed_products()
+  return render(request, 'pages/products/product_detail.html', { 'title': title, 'product': product, 'colors': colors, 'sizes': sizes, 'reviews': reviews, 'recommend_list': recommend_list, 'viewed_products': viewed_products})
 
 def search(request):
   keyword = request.GET.get('keyword', '')

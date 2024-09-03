@@ -8,14 +8,12 @@
   {% for product in products %}
   <div class="product-container">
     <a href="/products/{{product.slug}}">{{product.title}}</a>
-    <img src="{{product.thumbnail}}" width="100px" height="auto" alt="Ảnh Sản Phẩm">
-    <button value="{{product.id}}" class="btn btn-success" id="add-cart">Add To Cart</button>
+    <img img-2="{{product.image_2}}" img-1="{{product.image_1}}" src="{{product.image_1}}" width="100px" height="auto" alt="Ảnh Sản Phẩm">
     {% if product.is_sale %}
     <span>-{{product.discount}}%</span>
     <span>{{product.sale_price}}</span>
     <strike>{{product.price}}</strike>
     {% endif %}
-    <a href="/collections/ao-kieu">hihi</a>
   </div>
   {% endfor %} 
 {% endblock %}
