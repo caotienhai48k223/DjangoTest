@@ -1,10 +1,8 @@
 {% extends 'layouts/default.html' %}
 
 {% block main %}
+{% include '../../partials/alert.html' %}
   {% if cart_products%}
-    {%for message in messages%}
-    <div>{{message}}</div>
-    {% endfor %}
     {% for item in cart_products%}
       {% if item.product.is_sale %}
         <div class="d-flex">

@@ -2,6 +2,7 @@
 {% load static %}  
 
 {% block main %}
+  {% include '../../partials/alert.html' %}
   <div>Thông Tin Đơn Hàng</div>
   {% for item in cart_products%}
   {% if item.product.is_sale %}

@@ -1,7 +1,7 @@
-{% extends 'layouts/default.html' %} {% block main %} 
-{%for message in messages%}
-<div>{{message}}</div>
-{% endfor %}
+{% extends 'layouts/default.html' %} 
+
+{% block main %} 
+{% include '../../partials/alert.html' %}
 <div class="product-container" style="display: flex; justify-content: center">
   <div class="col-12 row">
     <div class="col-9">

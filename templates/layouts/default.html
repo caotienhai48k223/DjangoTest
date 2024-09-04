@@ -4,84 +4,24 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link
-      rel="stylesheet"
-      href="{% static 'css/style.css' %}"
-    />
+    <link rel="stylesheet" href="{% static 'css/style.css' %}"/>
     <link rel="icon" href="{% static 'favicon.ico' %}" />
-    <link
-      rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css"
-    />
-    <link
-      href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css"
-      rel="stylesheet"
-      integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65"
-      crossorigin="anonymous"
-    />
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
-      integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A=="
-      crossorigin="anonymous"
-      referrerpolicy="no-referrer"
-    />
-    <script
-      src="https://code.jquery.com/jquery-3.7.1.min.js"
-      integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo="
-      crossorigin="anonymous"
-    ></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css"/>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer"/>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
     <title>{{title}}</title>
   </head>
   <body>
-  {% include '../partials/header.html' %} 
+    {% include '../partials/header.html' %} 
     <main style="padding-top: 116.4px; position: relative; z-index: 1;">
       {% block main %} {% endblock %} 
     </main>
-  {% include '../partials/footer.html' %}
-    <div class="header-search" header-search>
-      <div class="header-container" id="header-search">
-        <form action="/search" class="input-group" id="form-search">
-          <input
-            type="text"
-            class="form-control input-group-append"
-            placeholder="Nhập Từ Khóa"
-            name="keyword"
-          />
-          <button class="btn btn-success" type="submit">Search</button>
-        </form>
-      </div>
-    </div>
-    <div payment-img class="payment-card d-none">
-      <div class="x-mark-div">
-        <i class="fa-regular fa-circle-xmark x-icon-img"></i>
-      </div>
-      <div class="content-payment-div">
-        <center>
-          <div class="note-payment">
-            <p><strong>Vui Lòng Quét Mã Bên Dưới Để Chuyển Khoản</strong></p>
-            <i>Nội dung chuyển khoản:  'Họ Tên + Số Điện Thoại'</i>
-          </div>
-          <div class="payment-img">
-            <img src="{% static 'images/paymentimg.jpg' %}" alt="Ảnh Thanh Toán">
-          </div>
-        </center>
-        <form action="/payment/process_order/" method="POST" class="btn-payment-div">
-          {% csrf_token %}
-          <button class="btn btn-outline-success" confirm-payment style="text-decoration: none">Đã Thanh Toán</button>
-        </form>
-      </div>
-    </div>
-    <script
-      src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"
-      integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3"
-      crossorigin="anonymous"
-    ></script>
-    <script
-      src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.min.js"
-      integrity="sha384-cuYeSxntonz0PPNlHhBs68uyIAVpIIOZZ5JqeqvYYIcEL727kskC66kF92t6Xl2V"
-      crossorigin="anonymous"
-    ></script>
+    {% include '../partials/footer.html' %}
+    {% include '../partials/search.html' %}
+    {% include '../partials/payment.html' %}
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js" integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.min.js" integrity="sha384-cuYeSxntonz0PPNlHhBs68uyIAVpIIOZZ5JqeqvYYIcEL727kskC66kF92t6Xl2V" crossorigin="anonymous"></script>
     <script src="{% static 'js/script.js' %}"></script>
   </body>
 </html>

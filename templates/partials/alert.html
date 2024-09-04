@@ -1,0 +1,13 @@
+{% if messages %}
+  {% for message in messages %}
+  <div class="message info" date-time="5000" show-alert>
+    <div class="alert alert-success d-flex gap-2 align-items-center">
+      <i class="fa-solid fa-circle-check" style="color: green;"></i>
+      <span>{{message}}</span>
+      <div class="close-alert" style="font-size: 18px; color: red; cursor: pointer;">
+        <i class="fa-regular fa-circle-xmark"></i>
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+{% endif %}

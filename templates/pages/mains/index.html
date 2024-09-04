@@ -1,9 +1,7 @@
 {% extends 'layouts/default.html' %}
 
 {% block main %}
-  {% for message in messages %}
-    <div>{{message}}</div>
-  {% endfor %}
+  {% include '../../partials/alert.html' %}
   <h1>Welcome to web</h1>
   {% for product in products %}
   <div class="product-container">

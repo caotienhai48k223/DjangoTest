@@ -20,7 +20,7 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 def index(request):
   title = 'Trang Chủ'
   products= Product.objects.all()
-  return render(request, 'pages/index.html', { 'products': products, 'title': title })
+  return render(request, 'pages/mains/index.html', { 'products': products, 'title': title })
 
 def register(request):
   if request.user.is_authenticated:
@@ -81,7 +81,7 @@ def update_user(request):
       user_form.save()
       auth.login(request, current_user)
       messages.success(request, 'Sửa Hồ Sơ Thành Công')
-      return redirect('index')
+      return redirect('account')
     return render (request, 'pages/accounts/update_user.html', {'title': title, 'user_form': user_form})
   else: 
     return redirect('index')
@@ -98,7 +98,7 @@ def update_info(request):
       form.save()
       shipping_form.save()
       messages.success(request, 'Sửa Thông Tin Thành Công')
-      return redirect('index')
+      return redirect('account')
     return render (request, 'pages/accounts/update_info.html', {'title': title, 'form': form , 'shipping_form': shipping_form})
   else: 
     return redirect('index')
