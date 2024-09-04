@@ -2,18 +2,18 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse, JsonResponse
 from django.contrib.auth.models import User, auth
 from django.contrib import messages
-from .models import Product, Room, Message, Category, Profile, ProductVariant
+from .models import Product, Room, Message, Category, Profile, Collection
 from .forms import SignUpForm, UpdateUserForm, UserInfoForm
 from payment.forms import ShippingForm
 from payment.models import ShippingAddress
-from django.db.models import OuterRef, Subquery
+from django.db.models import OuterRef, Subquery, Sum
 from django.utils.text import slugify
 from django.utils import timezone
 import json
 from cart.cart import Cart
 from itertools import chain
 from .recently_viewed import RecentlyViewed
-from django.core.paginator import Paginator
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 
 # Create your views here.
@@ -106,23 +106,73 @@ def update_info(request):
 def category(request, cat):
   cat = slugify(cat)
   category = Category.objects.filter(slug__icontains=cat).first()
-  if category:
-    products = Product.objects.filter(category=category)
-    title = category
-    return render(request, 'pages/products/category.html', {'products': products, 'title':title, 'category': category})
+  collection = Collection.objects.filter(slug__icontains=cat).first()
+  if category or collection:
+    if category:
+      products = Product.objects.filter(category=category)
+      title = category
+    else:
+      products = Product.objects.filter(collection=collection)
+      title = collection
+    sort_by = request.GET.get('sort_by')
+    if sort_by == 'price-ascending':
+      products = products.order_by('price')
+    elif sort_by == 'price-descending':
+      products = products.order_by('-price')
+    elif sort_by == 'title-ascending':
+      products = products.order_by('title')
+    elif sort_by == 'title-descending':
+      products = products.order_by('-title') 
+    elif sort_by == 'created-ascending':
+      products = products.order_by('created_date')
+    elif sort_by == 'created-descending':
+      products = products.order_by('-created_date')
+    elif sort_by == 'best-selling':
+      products = products.annotate(total_q_purchase=Sum('variants__q_purchase')).order_by('-total_q_purchase')
+    else:
+      products = products.order_by('?')
+    paginator = Paginator(products, 16)
+    page_number = request.GET.get('page')
+    try:
+      page_obj = paginator.get_page(page_number)
+    except PageNotAnInteger:
+      page_obj = paginator.page(1)
+    except EmptyPage:
+      page_obj = paginator.page(paginator.num_pages)
+    return render(request, 'pages/products/category.html', {'page_obj': page_obj, 'title':title, 'sort_by': sort_by})
   else:
     return redirect('collections')
 
-def products(request):
-  return redirect('collections')
 
 def collections(request):
   title='Tất Cả Sản Phẩm'
+  sort_by = request.GET.get('sort_by')
   products= Product.objects.all()
-  paginator = Paginator(products, 1)
+  if sort_by == 'price-ascending':
+    products = products.order_by('price')
+  elif sort_by == 'price-descending':
+    products = products.order_by('-price')
+  elif sort_by == 'title-ascending':
+    products = products.order_by('title')
+  elif sort_by == 'title-descending':
+    products = products.order_by('-title') 
+  elif sort_by == 'created-ascending':
+    products = products.order_by('created_date')
+  elif sort_by == 'created-descending':
+    products = products.order_by('-created_date')
+  elif sort_by == 'best-selling':
+    products = products.annotate(total_q_purchase=Sum('variants__q_purchase')).order_by('-total_q_purchase')
+  else:
+    products = products.order_by('?')
+  paginator = Paginator(products, 16)
   page_number = request.GET.get('page')
-  page_obj = paginator.get_page(page_number)
-  return render(request, 'pages/products/collections.html', { 'title': title, 'page_obj': page_obj })
+  try:
+    page_obj = paginator.get_page(page_number)
+  except PageNotAnInteger:
+    page_obj = paginator.page(1)
+  except EmptyPage:
+    page_obj = paginator.page(paginator.num_pages)
+  return render(request, 'pages/products/collections.html', { 'title': title, 'page_obj': page_obj, 'sort_by': sort_by })
 
 def product_detail(request, slug):
   product = get_object_or_404(Product, slug=slug)
@@ -166,8 +216,33 @@ def search(request):
   keyword = request.GET.get('keyword', '')
   if keyword:
     title=f"Kết Quả Tìm Kiếm '{keyword}'"
-    matching_products = Product.objects.filter(title__icontains=keyword)
-    return render(request, 'pages/products/search.html', { 'title': title, 'product_search': matching_products, 'keyword': keyword })
+    products = Product.objects.filter(title__icontains=keyword)
+    sort_by = request.GET.get('sort_by')
+    if sort_by == 'price-ascending':
+      products = products.order_by('price')
+    elif sort_by == 'price-descending':
+      products = products.order_by('-price')
+    elif sort_by == 'title-ascending':
+      products = products.order_by('title')
+    elif sort_by == 'title-descending':
+      products = products.order_by('-title') 
+    elif sort_by == 'created-ascending':
+      products = products.order_by('created_date')
+    elif sort_by == 'created-descending':
+      products = products.order_by('-created_date')
+    elif sort_by == 'best-selling':
+      products = products.annotate(total_q_purchase=Sum('variants__q_purchase')).order_by('-total_q_purchase')
+    else:
+      products = products.order_by('?')
+    paginator = Paginator(products, 16)
+    page_number = request.GET.get('page')
+    try:
+      page_obj = paginator.get_page(page_number)
+    except PageNotAnInteger:
+      page_obj = paginator.page(1)
+    except EmptyPage:
+      page_obj = paginator.page(paginator.num_pages)
+    return render(request, 'pages/products/search.html', { 'title': title, 'page_obj': page_obj, 'keyword': keyword, 'sort_by': sort_by })
   else:
     return redirect('collections')
 

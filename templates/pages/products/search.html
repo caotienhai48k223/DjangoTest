@@ -1,13 +1,85 @@
 {% extends 'layouts/default.html' %}
 
 {% block main %}
-  {% if product_search %}
-    {% for product in product_search %}
-    <div class="product-container">
-      <span>{{product.title}}</span> 
-      <img src="{{product.thumbnail}}" width="100px" height="auto" alt="Ảnh Sản Phẩm">
+  {% if page_obj %}
+  <div class="filter-product" style="display: flex; justify-content: flex-end">
+    <div class="col-2">
+      <form form-sort-by action="">
+        <input hidden name="keyword" value="{{keyword}}">
+        <select sort-by-product name="sort_by" class="form-select" aria-label="Default select example">
+          <option option {% if sort_by == 'manual'  or not sort_by %}selected{% endif %} value="manual">Sản phẩm nổi bật</option>
+          <option option {% if sort_by == 'price-ascending' %}selected{% endif %} value="price-ascending">Giá: Tăng dần</option>
+          <option option {% if sort_by == 'price-descending' %}selected{% endif %} value="price-descending">Giá: Giảm dần</option>
+          <option option {% if sort_by == 'title-ascending' %}selected{% endif %} value="title-ascending">Tên: A-Z</option>
+          <option option {% if sort_by == 'title-descending' %}selected{% endif %} value="title-descending">Tên: Z-A</option>
+          <option option {% if sort_by == 'created-ascending' %}selected{% endif %} value="created-ascending">Cũ nhất</option>
+          <option option {% if sort_by == 'created-descending' %}selected{% endif %} value="created-descending">Mới nhất</option>
+          <option option {% if sort_by == 'best-selling' %}selected{% endif %} value="best-selling">Bán chạy nhất</option>
+        </select>
+      </form>
     </div>
-    {% endfor %}
+  </div>
+  {% for product in page_obj %}
+  <div class="product-container">
+    <a href="/products/{{product.slug}}">{{product.title}}</a>
+    <img img-2="{{product.image_2}}" img-1="{{product.image_1}}" src="{{product.image_1}}" width="100px" height="auto" alt="Ảnh Sản Phẩm">
+    <button value="{{product.id}}" class="btn btn-success" id="add-cart">Add To Cart</button>
+    {% if product.is_sale %}
+    <span>-{{product.discount}}%</span>
+    <span>{{product.sale_price}}</span>
+    <strike>{{product.price}}</strike>
+    {% endif %}
+  </div>
+  {% endfor %} 
+  {% if page_obj.paginator.num_pages > 1 %}
+  <nav aria-label="...">
+    <ul class="pagination">
+      {% if page_obj.has_previous %}
+      <li class="page-item">
+        <a class="page-link" href="?keyword={{keyword}}{% if sort_by %}&sort_by={{sort_by}}{% endif %}&page=1">
+          <i class="fa-solid fa-angles-left"></i>
+        </a>
+      </li>
+      <li class="page-item">
+        <a class="page-link" href="?keyword={{keyword}}{% if sort_by %}&sort_by={{sort_by}}{% endif %}&page={{ page_obj.previous_page_number }}">
+          <i class="fa-solid fa-angle-left"></i>
+        </a>
+      </li>
+      {% endif %}
+  
+      {% for num in page_obj.paginator.page_range %}
+        {% if num < page_obj.number|add:"-3" or num > page_obj.number|add:"2" %}
+          {% if num == page_obj.paginator.page_range|last %}
+            <li class="page-item">
+              <a class="page-link" href="?keyword={{keyword}}{% if sort_by %}&sort_by={{sort_by}}{% endif %}&page={{ num }}"> {{ num }} </a>
+            </li>
+          {% elif num == page_obj.number|add:"3" %}
+            <li class="page-item disabled">
+              <span class="page-link">...</span>
+            </li>
+          {% endif %}
+        {% else %}
+          <li class="page-item {% if page_obj.number == num %}active{% endif %}">
+            <a class="page-link" href="?keyword={{keyword}}{% if sort_by %}&sort_by={{sort_by}}{% endif %}&page={{ num }}">{{ num }}</a>
+          </li>
+        {% endif %}
+      {% endfor %}
+  
+      {% if page_obj.has_next %}
+      <li class="page-item">
+        <a class="page-link" href="?keyword={{keyword}}{% if sort_by %}&sort_by={{sort_by}}{% endif %}&page={{ page_obj.next_page_number }}">
+          <i class="fa-solid fa-angle-right"></i>
+        </a>
+      </li>
+      <li class="page-item">
+        <a class="page-link" href="?keyword={{keyword}}{% if sort_by %}&sort_by={{sort_by}}{% endif %}&page={{ page_obj.paginator.num_pages }}">
+          <i class="fa-solid fa-angles-right"></i>
+        </a>
+      </li>
+      {% endif %}
+    </ul>
+  </nav>
+  {% endif %}
   {% else %}
     <span>Không tìm thấy kết quả của '{{keyword}}'</span>
   {% endif %}

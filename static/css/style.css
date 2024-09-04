@@ -218,8 +218,10 @@ header {
 
 .header-search {
   position: fixed;
-  top: 100px;
+  top: 200px;
+  right: 200px;
   display: none;
+  z-index: 9999;
 }
 #header-search {
   display: flex;

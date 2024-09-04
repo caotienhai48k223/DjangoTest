@@ -87,3 +87,10 @@ if (imageProduct.length > 0) {
   });
 }
 
+const sortByProduct = document.querySelector('[sort-by-product]')
+if (sortByProduct) {
+  sortByProduct.addEventListener('change', () => {
+    const sortByForm = document.querySelector('[form-sort-by]')
+    sortByForm.submit()
+  })
+}

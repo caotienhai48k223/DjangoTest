@@ -1,6 +1,7 @@
 {% extends 'layouts/default.html' %}
 
 {% block main %}
+  {% include '../../partials/filter.html' %}
   {% for product in page_obj %}
   <div class="product-container">
     <a href="/products/{{product.slug}}">{{product.title}}</a>
@@ -13,5 +14,6 @@
     {% endif %}
   </div>
   {% endfor %} 
-  {% include '../../partials/navigation.html' %}
+  {% include '../../partials/pagination.html' %}
+
 {% endblock %}
