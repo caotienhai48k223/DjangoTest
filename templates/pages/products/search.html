@@ -15,8 +15,10 @@
           <option option {% if sort_by == 'created-ascending' %}selected{% endif %} value="created-ascending">Cũ nhất</option>
           <option option {% if sort_by == 'created-descending' %}selected{% endif %} value="created-descending">Mới nhất</option>
           <option option {% if sort_by == 'best-selling' %}selected{% endif %} value="best-selling">Bán chạy nhất</option>
+          <option option {% if sort_by == 'quantity-descending' %}selected{% endif %} value="quantity-descending">Tồn kho: Giảm dần</option>
         </select>
       </form>
+      <i class="bi bi-sort-alpha-down a-z-icon"></i>
     </div>
   </div>
   {% for product in page_obj %}

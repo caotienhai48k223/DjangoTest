@@ -1,5 +1,5 @@
 <div class="filter-product" style="display: flex; justify-content: flex-end">
-  <div class="col-2">
+  <div filter-div class="col-2">
     <form form-sort-by action="">
       <select sort-by-product name="sort_by" class="form-select" aria-label="Default select example">
         <option option {% if sort_by == 'manual'  or not sort_by %}selected{% endif %} value="manual">Sản phẩm nổi bật</option>
@@ -10,7 +10,9 @@
         <option option {% if sort_by == 'created-ascending' %}selected{% endif %} value="created-ascending">Cũ nhất</option>
         <option option {% if sort_by == 'created-descending' %}selected{% endif %} value="created-descending">Mới nhất</option>
         <option option {% if sort_by == 'best-selling' %}selected{% endif %} value="best-selling">Bán chạy nhất</option>
+        <option option {% if sort_by == 'quantity-descending' %}selected{% endif %} value="quantity-descending">Tồn kho: Giảm dần</option>
       </select>
     </form>
+    <i class="bi bi-sort-alpha-down a-z-icon"></i>
   </div>
 </div>

@@ -63,8 +63,11 @@ def login(request):
     return render(request, 'pages/accounts/login.html', {'title': title})
 
 def account(request):
-  title = 'Tài Khoản'
-  return render(request, 'pages/accounts/account.html', { 'title': title })
+  if request.user.is_authenticated:
+    title = 'Tài Khoản'
+    return render(request, 'pages/accounts/account.html', { 'title': title })
+  else:
+    return redirect('login')
 
 def logout(request):
   auth.logout(request)
@@ -107,8 +110,14 @@ def category(request, cat):
   cat = slugify(cat)
   category = Category.objects.filter(slug__icontains=cat).first()
   collection = Collection.objects.filter(slug__icontains=cat).first()
-  if category or collection:
-    if category:
+  if category or collection or cat == 'san-pham-moi' or cat == 'san-pham-ban-chay':
+    if cat == 'san-pham-moi':
+      products = Product.objects.all().order_by('-created_date')
+      title = 'Sản Phẩm Mới'
+    elif cat == 'san-pham-ban-chay':
+      products = Product.objects.all().annotate(total_q_purchase=Sum('variants__q_purchase')).order_by('-total_q_purchase')
+      title = 'Sản Phẩm Bán Chạy'
+    elif category:
       products = Product.objects.filter(category=category)
       title = category
     else:
@@ -129,8 +138,15 @@ def category(request, cat):
       products = products.order_by('-created_date')
     elif sort_by == 'best-selling':
       products = products.annotate(total_q_purchase=Sum('variants__q_purchase')).order_by('-total_q_purchase')
+    elif sort_by == 'quantity-descending':
+      products = products.annotate(total_stock = Sum('variants__stock')).order_by('-total_stock')
     else:
-      products = products.order_by('?')
+      if cat == 'san-pham-moi':
+        products = products.order_by('-created_date')
+      elif cat == 'san-pham-ban-chay':
+        products = products.annotate(total_q_purchase=Sum('variants__q_purchase')).order_by('-total_q_purchase')
+      else:
+        products = products.order_by('?')
     paginator = Paginator(products, 16)
     page_number = request.GET.get('page')
     try:
@@ -146,8 +162,8 @@ def category(request, cat):
 
 def collections(request):
   title='Tất Cả Sản Phẩm'
-  sort_by = request.GET.get('sort_by')
   products= Product.objects.all()
+  sort_by = request.GET.get('sort_by')
   if sort_by == 'price-ascending':
     products = products.order_by('price')
   elif sort_by == 'price-descending':
@@ -162,6 +178,8 @@ def collections(request):
     products = products.order_by('-created_date')
   elif sort_by == 'best-selling':
     products = products.annotate(total_q_purchase=Sum('variants__q_purchase')).order_by('-total_q_purchase')
+  elif sort_by == 'quantity-descending':
+    products = products.annotate(total_stock = Sum('variants__stock')).order_by('-total_stock')
   else:
     products = products.order_by('?')
   paginator = Paginator(products, 16)
@@ -179,6 +197,11 @@ def product_detail(request, slug):
   title = product.title
   variants = product.variants.all()
   reviews = product.reviews.all()
+  if reviews:
+    list_rating = [int(review.rating) for review in reviews]
+    product.avg_rating = sum(list_rating)/len(list_rating)
+  else:
+    product.avg_rating = ""
   colors = variants.values_list('color', flat=True).distinct()
   sizes = variants.values_list ('size', flat=True).distinct()
   images = list(chain.from_iterable(variants.values_list('image_1', 'image_2', 'image_3', 'image_4').distinct()[::-1]))
@@ -232,6 +255,8 @@ def search(request):
       products = products.order_by('-created_date')
     elif sort_by == 'best-selling':
       products = products.annotate(total_q_purchase=Sum('variants__q_purchase')).order_by('-total_q_purchase')
+    elif sort_by == 'quantity-descending':
+      products = products.annotate(total_stock = Sum('variants__stock')).order_by('-total_stock')
     else:
       products = products.order_by('?')
     paginator = Paginator(products, 16)

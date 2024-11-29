@@ -333,3 +333,19 @@ header {
   cursor: pointer;
 }
 /* End Show Alert  */
+
+[filter-div] {
+  position: relative;
+}
+.form-select {
+  border-radius: 0 !important;
+  background-image: none !important;
+  font-family: "Montserrat", sans-serif;
+  cursor: pointer;
+}
+.a-z-icon {
+  position: absolute;
+  font-size: 22px;
+  top: 3px;
+  right: 12px;
+}

@@ -51,6 +51,9 @@
         <br><br>
       {% endif %}
     {% endfor %}
+    <div note-update class="d-none">
+      <p style="font-family: 'Montserrat', sans-serif; font-size: 13px; color: red;">Vui lòng ấn cập nhật để áp dụng thay đổi</p>
+    </div>
     <div style="display: flex;">
       <h3>Tổng giá: {{totals}}</h3>
       <a href="/payment/checkout/">Thanh Toán</a>
@@ -96,6 +99,14 @@
           error: function(xhr, errmsg, err){
             
           }
+        })
+      })
+
+      const changQuantity = document.querySelectorAll('input[type="number"]')
+      const noteUpdate = document.querySelector('[note-update]')
+      changQuantity.forEach((input) => {
+        input.addEventListener('change', () => {
+          noteUpdate.classList.remove('d-none')
         })
       })
     </script>

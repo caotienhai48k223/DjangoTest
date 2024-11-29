@@ -36,6 +36,9 @@
       <center>
         <p>{{product.title}}</p>
         <p>{{product.price}}</p>
+        {% if product.avg_rating %}
+        <p>Rating: {{product.avg_rating}} ⭐</p>
+        {% endif %}
         {% if colors %}
         <div class="hihi">
           <h5>Chọn Màu</h5>

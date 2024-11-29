@@ -155,7 +155,7 @@ def unshipped_tab(request):
       now = timezone.make_aware(datetime.datetime.now())
       order.update(shipped=True, date_shipped=now)
       messages.success(request, 'Cập Nhật Thành Công')
-      return redirect('/account/')
+      return redirect('unshipped-tab')
     return render(request, "pages/dashboards/unshipped_tab.html", {'title': title, "orders": orders})
   else:
     return redirect('index')
@@ -169,7 +169,7 @@ def shipped_tab(request):
       order = Order.objects.filter(id=num)
       order.update(shipped=False)
       messages.success(request, 'Cập Nhật Thành Công')
-      return redirect('/account/')
+      return redirect('shipped-tab')
     return render(request, "pages/dashboards/shipped_tab.html", {"title": title, "orders": orders})
   else:
     return redirect('index')
